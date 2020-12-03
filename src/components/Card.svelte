@@ -11,8 +11,10 @@
 
 <div class="ui card">
   <div class="content">
-    <div class="header">{title}</div>
-    <div class="ui divider" />
+    {#if title}
+      <div class="header">{title}</div>
+      <div class="ui divider" />
+    {/if}
     <slot />
   </div>
 </div>
