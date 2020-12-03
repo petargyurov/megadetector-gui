@@ -1,0 +1,28 @@
+<script>
+  import router from "page";
+
+  import Sidebar from "./components/Sidebar.svelte";
+
+  // Routes
+  import Home from "./routes/Home.svelte";
+  import Detect from "./routes/Detect.svelte";
+  import Models from "./routes/Models.svelte";
+
+  let page;
+  let params;
+
+  router("/", () => (page = Home));
+  router("/detect", () => (page = Detect));
+  router("/models", () => (page = Models));
+  router.start();
+</script>
+
+<style>
+</style>
+
+<main>
+  <Sidebar />
+  <div class="pusher">
+    <svelte:component this={page} {params} />
+  </div>
+</main>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>Kiwi</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="../semantic/dist/semantic.css" />
+    <link rel="stylesheet" href="./build/bundle.css" />
+
+    <!-- jQuery Fix  -->
+    <script>
+      if (typeof module === 'object') {
+        window.module = module
+        module = undefined
+      }
+    </script>
+
+    <!-- Normal Imports -->
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../semantic/dist/semantic.js"></script>
+    <script src="../src/bindings/myscript.js"></script>
+    <script defer src="./build/bundle.js"></script>
+
+    <!-- jQuery Fix -->
+    <script>
+      if (window.module) module = window.module
+    </script>
+  </head>
+
+  <body style="overflow-y: hidden;"></body>
+</html>
