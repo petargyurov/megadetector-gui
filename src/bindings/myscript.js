@@ -1,4 +1,3 @@
-let { PythonShell } = require('python-shell')
 const { dialog } = require('electron').remote
 
 function runMegaDetector() {

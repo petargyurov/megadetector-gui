@@ -10,12 +10,8 @@
 
   const selectFolder = () => {
     dialog.showOpenDialog({ properties: ["openDirectory"] }).then((result) => {
-      //window.$("#selectedDirectory").text(result.filePaths[0]);
       selectedFolder = result.filePaths[0];
       folderSelected = true;
-      window.$("#detectProgressBar").progress({
-        total: 10,
-      });
     });
   };
 
