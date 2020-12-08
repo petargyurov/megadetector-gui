@@ -1,31 +1,35 @@
 let { PythonShell } = require('python-shell')
 const { dialog } = require('electron').remote
 
-function runMegaDetector(val) {
-  let dataPath = null // TODO
+function runMegaDetector() {
+  let dataPath = $('#selectedDirectory').text()
   let conf = $('.ui.slider').slider('get value')
 
-  let options = {
-    mode: 'text',
-    // pythonPath: 'path/to/python',
-    pythonOptions: ['-u'], // get print results in real-time
-    scriptPath: '.',
-    args: [dataPath, conf],
-  }
+  var executablePath =
+    'C:\\Users\\pgyur\\Documents\\My Projects\\megadetector-api\\dist\\test.exe'
+  var parameters = [dataPath, '--conf', conf, '--electron']
 
-  let pyshell = new PythonShell('engine/my_script.py', options)
-
-  pyshell.on('message', function (message) {
-    $('#detectProgressBar').progress({
-      percent: message * 10,
-    })
+  var child = require('child_process').execFile(executablePath, parameters, {
+    stdio: ['inherit'],
   })
 
-  // end the input stream and allow the process to exit
-  pyshell.end(function (err, code, signal) {
-    if (err) throw err
-    console.log('The exit code was: ' + code)
-    console.log('The exit signal was: ' + signal)
-    console.log('finished')
+  child.stdout.on('data', (data) => {
+    if (data.startsWith('Processing Images')) {
+      let progressBarInfo = []
+      data.split('|').forEach((x) => {
+        progressBarInfo.push(x.trim())
+      })
+
+      let pos = progressBarInfo[0].split(']')[1].trim()
+      let percent = Number(progressBarInfo[1].replace('%', ''))
+      let eta = progressBarInfo[2]
+
+      $('#detectProgressBar').progress({
+        percent: percent,
+      })
+      $('#pos').text(pos)
+      $('#eta').text(eta === undefined ? '--:--:--' : eta)
+      console.log(pos, percent, eta)
+    }
   })
 }

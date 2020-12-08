@@ -103,18 +103,20 @@
     </Card>
     <Card>
       <div class="ui grid">
-        <div class="row">
-          <div class="left floated ten wide column">
-            <div
-              class="ui green progress"
-              id="detectProgressBar"
-              style="margin-bottom: 0;">
-              <div class="bar" style="height: 2.5em">
-                <div class="progress" />
-              </div>
+        <div class="center aligned row" style="padding-bottom: 0">
+          <div class="four wide column" style="padding-right: 0">
+            <div class="ui large fluid label">
+              <i class="images outline icon" />
+              <span id="pos">--/--</span>
             </div>
           </div>
-          <div class="right floated five wide column">
+          <div class="four wide column" style="padding-right: 0">
+            <div class="ui large fluid label">
+              <i class="clock icon" /><span id="eta">--:--:--</span>
+            </div>
+          </div>
+          <div class="two wide column" />
+          <div class="six wide column">
             {#if !processing}
               <button
                 disabled={!(modelSelected && folderSelected)}
@@ -132,6 +134,18 @@
                 Stop
               </button>
             {/if}
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen wide column">
+            <div
+              class="ui green indicating progress"
+              id="detectProgressBar"
+              style="margin-bottom: 0;">
+              <div class="bar" style="height: 2.5em">
+                <div class="progress" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
