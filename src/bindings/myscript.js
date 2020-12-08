@@ -1,5 +1,3 @@
-const { dialog } = require('electron').remote
-
 function runMegaDetector() {
   let dataPath = $('#selectedDirectory').text()
   let conf = $('.ui.slider').slider('get value')

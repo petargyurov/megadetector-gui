@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import Page from "../components/Page.svelte";
   import Card from "../components/Card.svelte";
+  const { dialog } = require("electron").remote;
 
   let modelSelected = false;
   let folderSelected = false;
