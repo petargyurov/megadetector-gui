@@ -1,0 +1,6 @@
+# THIS IS A DUMMY FILE USED TO ADD DIRECTORIES TO GIT BUT NOT THEIR CONTENTS
+
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore

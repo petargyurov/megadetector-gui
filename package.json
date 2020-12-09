@@ -11,7 +11,8 @@
     "publish": "electron-forge publish",
     "sv-build": "rollup -c",
     "sv-dev": "rollup -c -w",
-    "sv-start": "sirv public"
+    "sv-start": "sirv public",
+    "semantic-build": "npx gulp --gulpfile ./semantic/gulpfile.js build"
   },
   "keywords": [],
   "author": {

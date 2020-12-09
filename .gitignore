@@ -1,6 +1,5 @@
-/engine
-/semantic
-/node_modules
+/semantic/dist/
+/semantic/tasks/
 /node_modules/
 /public/build/
 
