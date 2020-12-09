@@ -34,9 +34,8 @@ If you wish to use this project for development purposes follow these steps:
 
 Pre-requsites:
 
-1. Git
-2. Node.js
-3. The backend executable (see instructions [here](https://github.com/petargyurov/megadetector-api#building-an-executable))
+1. Node.js (https://nodejs.org/en/)
+2. The backend executable (see instructions [here](https://github.com/petargyurov/megadetector-api#building-an-executable))
 
 Steps:
 
@@ -50,6 +49,8 @@ Running the application:
 
 1. To run the app in dev mode: `npm run start`
 
-```
-:warning: Please note that there is a bug with hot-reloading the app. You need to re-run the app each time you make changes. Will hopefully fix soon.
-```
+---
+
+:warning: There is a bug with hot-reloading the app. You need to re-run the app each time you make changes. Will hopefully fix soon.
+
+---
