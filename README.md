@@ -27,3 +27,29 @@ This repository is for the frontend of the application. Whether to keep the back
 The application itself is built using ElectronJS. It provides flexibility and it's easy to use. The UI is build using the [Svelte](https://svelte.dev/) framework, and components are styled using [Fomantic-UI](https://fomantic-ui.com/)
 
 ElectronJS lets you execute native code outside the normal browser window which makes it easy for us to invoke the backend executable. The backend is built to function like a CLI program which makes it easy for us to pass commands and parameters to it. For more information check out the [backend repository](https://github.com/petargyurov/megadetector-api).
+
+### Dev Installation & Running (Windows only)
+
+If you wish to use this project for development purposes follow these steps:
+
+Pre-requsites:
+
+1. Git
+2. Node.js
+3. The backend executable (see instructions [here](https://github.com/petargyurov/megadetector-api#building-an-executable))
+
+Steps:
+
+1. Clone this repository
+2. Install the depencies using `npm install`
+3. Build the Fomantic (Semantic) CSS and JS: `npm run semantic-build`
+4. Place the backend executable (`cli.exe`) in the `engine/` folder
+5. Place the MegaDetector model file (`md_v4.1.0.pb`) in the `engine/models/` folder
+
+Running the application:
+
+1. To run the app in dev mode: `npm run start`
+
+```
+:warning: Please note that there is a bug with hot-reloading the app. You need to re-run the app each time you make changes. Will hopefully fix soon.
+```
