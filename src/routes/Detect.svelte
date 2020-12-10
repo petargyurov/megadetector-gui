@@ -126,7 +126,9 @@
                 Process
               </button>
             {:else}
-              <button class="ui right labeled fluid icon red button">
+              <button
+                id="stopButton"
+                class="ui right labeled fluid icon red button loading disabled">
                 <i class="stop icon" />
                 Stop
               </button>

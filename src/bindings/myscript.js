@@ -24,6 +24,10 @@ const runMegaDetector = () => {
 
   child.stdout.on('data', (data) => {
     if (data.startsWith('Processing Images')) {
+      if ($('#stopButton').hasClass('loading')) {
+        $('#stopButton').removeClass('loading disabled')
+      }
+
       let progressBarInfo = []
       data.split('|').forEach((x) => {
         progressBarInfo.push(x.trim())
