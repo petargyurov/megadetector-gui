@@ -1,6 +1,5 @@
 <script>
   export let title;
-  let x;
 </script>
 
 <style>
@@ -17,7 +16,14 @@
   </div>
   <div class="row">
     <slot>
-      <h4 class="missing">Nothing Here!</h4>
+      <div class="column missing">
+        <div class="ui placeholder segment">
+          <div class="ui icon header">
+            <i class="tools icon" />
+            Under Construction!
+          </div>
+        </div>
+      </div>
     </slot>
   </div>
 </div>
