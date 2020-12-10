@@ -1,14 +1,12 @@
 const path = require('path')
 
-function runMegaDetector() {
-  let modelPath =
-    'C:\\Users\\pgyur\\Documents\\My Projects\\megadetector-api\\md_v4.1.0.pb' // TODO
+const runMegaDetector = () => {
+  let modelPath = path.join(process.cwd(), 'engine', 'models', 'md_v4.1.0.pb')
   let inputPath = $('#selectedDirectory').text()
   let outputPath = path.join(inputPath, 'output')
   let conf = Number($('.ui.slider').slider('get value')) / 100.0
 
-  var executablePath =
-    'C:\\Users\\pgyur\\Documents\\My Projects\\megadetector-api\\dist\\cli.exe' // TODO
+  var executablePath = path.join('engine', 'cli.exe')
   var parameters = [
     modelPath,
     inputPath,

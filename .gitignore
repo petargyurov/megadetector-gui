@@ -4,3 +4,4 @@
 /public/build/
 
 .DS_Store
+*.exe
