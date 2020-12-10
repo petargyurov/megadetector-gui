@@ -9,8 +9,8 @@
   style="background-color: #f8f9fa; border: 0; box-shadow: 1;">
   <div style="padding: 1em; margin-bottom: 1em;">
     <h3>
-      <i class="circular kiwi bird icon" />
-      Kiwi
+      <i class="circular crosshairs icon" />
+      MegaDetector
       <span class="ui tiny grey text">v0.1</span>
     </h3>
   </div>
