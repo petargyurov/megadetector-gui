@@ -39,7 +39,7 @@
 </style>
 
 <Page title="Detect">
-  <div class="column">
+  <div class="column" style="width: 60%;">
     <Card title="Configure">
       <div class="content">
         <div class="ui two column grid">
@@ -128,7 +128,11 @@
             {:else}
               <button
                 id="stopButton"
-                class="ui right labeled fluid icon red button loading disabled">
+                class="ui right labeled fluid icon red button loading disabled"
+                on:click={() => {
+                  processing = false;
+                  stopMegaDetector();
+                }}>
                 <i class="stop icon" />
                 Stop
               </button>

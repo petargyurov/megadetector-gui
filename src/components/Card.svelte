@@ -1,15 +1,8 @@
 <script>
   export let title;
-  export let content;
 </script>
 
-<style>
-  .card {
-    width: 50%;
-  }
-</style>
-
-<div class="ui card">
+<div class="ui fluid card">
   <div class="content">
     {#if title}
       <div class="header">{title}</div>

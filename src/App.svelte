@@ -22,7 +22,7 @@
 
 <main>
   <Sidebar />
-  <div class="pusher">
+  <div class="pusher" style="padding-right: 21em;">
     <svelte:component this={page} {params} />
   </div>
 </main>

@@ -1,4 +1,7 @@
 const path = require('path')
+const kill = require('tree-kill')
+
+let child
 
 const runMegaDetector = () => {
   let modelPath = path.join(process.cwd(), 'engine', 'models', 'md_v4.1.0.pb')
@@ -18,7 +21,7 @@ const runMegaDetector = () => {
     '--electron',
   ]
 
-  var child = require('child_process').execFile(executablePath, parameters, {
+  child = require('child_process').execFile(executablePath, parameters, {
     stdio: ['inherit'],
   })
 
@@ -48,4 +51,15 @@ const runMegaDetector = () => {
   child.stderr.on('data', (data) => {
     console.log('stderr', data)
   })
+}
+
+const stopMegaDetector = () => {
+  kill(child.pid)
+
+  // reset UI
+  $('#detectProgressBar').progress({
+    percent: 0,
+  })
+  $('#pos').text('--/--')
+  $('#eta').text('--:--:--')
 }
