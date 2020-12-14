@@ -6,6 +6,7 @@
   // Routes
   import Home from "./routes/Home.svelte";
   import Detect from "./routes/Detect.svelte";
+  import Correct from "./routes/Correct.svelte";
   import Models from "./routes/Models.svelte";
 
   let page;
@@ -13,6 +14,7 @@
 
   router("/", () => (page = Home));
   router("/detect", () => (page = Detect));
+  router("/correct", () => (page = Correct));
   router("/models", () => (page = Models));
   router.start();
 </script>
