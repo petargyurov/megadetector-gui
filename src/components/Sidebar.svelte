@@ -18,8 +18,8 @@
   <a class="item" href="/detect">
     <h4><i class="eye icon" /> Detect</h4>
   </a>
-  <a class="item" href="/correct">
-    <h4><i class="check icon" /> Correct</h4>
+  <a class="item" href="/review">
+    <h4><i class="edit icon" /> Review</h4>
   </a>
   <a class="item" href="/models">
     <h4><i class="cubes icon" /> Models</h4>

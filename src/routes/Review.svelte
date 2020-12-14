@@ -57,7 +57,7 @@
 <style>
 </style>
 
-<Page title="Correct">
+<Page title="Review">
   <div class="column">
     {#if !resultsPath}
       <div class="ui placeholder segment">
