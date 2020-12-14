@@ -30,6 +30,7 @@
         categories = results.detection_categories;
         inputParams = results.info.input_params;
         confThresh = inputParams.render_conf_threshold;
+        console.log(inputParams.conf_digits);
         colourSplit = (1 - confThresh) / 3.0;
         currentImg = images[0];
       }
@@ -50,7 +51,7 @@
 
 <Page title="Correct">
   <div class="column">
-    <div class="ui fluid horizontal card">
+    <div class="ui fluid horizontal card" style="width: 90%;">
       <div>
         <img class="ui big image" src={currentImg ? currentImg.preview : ''} />
       </div>
@@ -88,7 +89,7 @@
                       class:orange={detection.conf <= confThresh + colourSplit}
                       class:olive={confThresh + colourSplit < detection.conf && detection.conf < 1 - colourSplit}
                       class:green={detection.conf >= 1 - colourSplit}>
-                      {Number(detection.conf) * 100.0}%
+                      {(Number(detection.conf) * 100).toPrecision(inputParams.conf_digits)}%
                     </div>
                   </div>
                 </div>
