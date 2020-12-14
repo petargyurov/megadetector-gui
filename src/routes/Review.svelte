@@ -11,7 +11,8 @@
   var confThresh;
   var colourSplit;
   var currentImg;
-  var resultsPath; //= "C:\\Users\\pgyur\\Desktop\\Demo\\output\\results.json"; // TODO:
+  var resultsPath;
+  var markAs;
 
   const selectFolder = () => {
     dialog.showOpenDialog({ properties: ["openFile"] }).then((result) => {
@@ -35,22 +36,26 @@
         console.log(inputParams.conf_digits);
         colourSplit = (1 - confThresh) / 3.0;
         currentImg = images[0];
+        updateMarkAs();
       }
     });
   };
 
+  const updateMarkAs = () => {
+    markAs = currentImg.detections.length > 0 ? "empty" : "animal";
+  };
+
   onMount(async () => {
-    window.$(".message .close").on("click", function () {
-      window.$(this).closest(".message").transition("fade");
-    });
+    window.$(".ui.modal").modal();
   });
 
   const nextImage = () => {
     images.shift(); // destructive
     if (images.length == 0) {
-      currentImg = null; // TODO: some sort of signal needed for UI to signify end
+      currentImg = { end: true }; // TODO: some sort of signal needed for UI to signify end
     }
     currentImg = images[0];
+    updateMarkAs();
   };
 </script>
 
@@ -128,13 +133,38 @@
             {/if}
           </div>
           <div class="ui fluid buttons">
-            <button class="ui red button">Wrong</button>
+            <button
+              class="ui gray button"
+              on:click={() => {
+                window.$('.ui.modal').modal('show');
+              }}>Mark as
+              {markAs}
+            </button>
             <button
               class="ui positive button"
-              on:click={nextImage}>Right</button>
+              on:click={nextImage}>Correct</button>
           </div>
         </div>
       </div>
     {/if}
+  </div>
+  <div class="ui tiny modal">
+    <div class="header">Are you sure you want to mark as {markAs}?</div>
+    <div class="content">
+      <div class="description">
+        The prediction will be overwritten and the original image will placed in
+        the "{markAs}" folder.
+      </div>
+    </div>
+    <div class="actions">
+      <div
+        class="ui button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+        }}>
+        Cancel
+      </div>
+      <div class="ui primary button">Yes</div>
+    </div>
   </div>
 </Page>
