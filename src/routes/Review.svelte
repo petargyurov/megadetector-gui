@@ -63,7 +63,7 @@
       <div class="ui placeholder segment">
         <div class="ui icon header">
           <i class="edit icon" />
-          Review model preditictions
+          Review model predictions
         </div>
         <div class="ui primary button" on:click={selectFolder}>
           Select Results File
