@@ -121,7 +121,7 @@
 
 <Page title="Review">
   <div class="column">
-    {#if !resultsPath}
+    {#if !currentImg}
       <div class="ui placeholder segment">
         <div class="ui icon header">
           <i class="edit icon" />
@@ -136,80 +136,79 @@
         class="ui fluid horizontal card"
         style="width: 100%; margin-bottom: 0;">
         <div>
+          <div class="left aligned floating ui label">
+            <i class="images outline icon" />
+            {path.basename(currentImg.file)}
+            <div class="detail">
+              {`${currentImgIndex + 1} / ${updatedResults.images.length}`}
+            </div>
+          </div>
           <img
             class="ui big image"
-            src={currentImg ? currentImg.preview : ''}
-            alt={currentImg ? currentImg.preview : 'Image'} />
+            src={currentImg.preview}
+            alt={currentImg.preview} />
         </div>
         <div class="content">
           <div style="height: 87%;">
-            {#if currentImg}
-              <div class="ui aligned two column grid">
-                <div class="row">
-                  <div class="left aligned column">
-                    <h2 class="ui header">Results</h2>
-                  </div>
-                  <div class="right aligned column">
-                    <h2 class="ui header">
-                      <button class="ui compact icon button">
-                        <i class="save icon" />
-                        Save Progress
-                      </button>
-                    </h2>
-                  </div>
+            <div class="ui aligned two column grid">
+              <div class="row">
+                <div class="left aligned column">
+                  <h2 class="ui header">Results</h2>
                 </div>
-                <div class="meta">
-                  <span
-                    class="category">{currentImg ? path.basename(currentImg.preview) : 'Loading...'}
-                  </span>
+                <div class="right aligned column">
+                  <h2 class="ui header">
+                    <button class="ui compact icon button">
+                      <i class="save icon" />
+                      Save Progress
+                    </button>
+                  </h2>
                 </div>
-
+              </div>
+              <div class="row" style="padding: 0">
+                <div class="column">
+                  <h3 class="ui header">Label</h3>
+                </div>
+                <div class="right aligned column">
+                  <h3 class="ui header">Confidence</h3>
+                </div>
+              </div>
+              {#each currentImg.detections as detection}
                 <div class="row">
                   <div class="column">
-                    <h3 class="ui header">Label</h3>
+                    <div
+                      class="ui large horizontal label"
+                      class:green={categories[detection.category] === 'animal'}
+                      class:grey={categories[detection.category] !== 'animal'}>
+                      {categories[detection.category]}
+                    </div>
+                    {#if currentImg.edited}
+                      <div class="ui large horizontal label">edited</div>
+                    {/if}
                   </div>
                   <div class="right aligned column">
-                    <h3 class="ui header">Confidence</h3>
+                    <div
+                      class="ui large horizontal label"
+                      class:orange={detection.conf <= confThresh + colourSplit}
+                      class:olive={confThresh + colourSplit < detection.conf && detection.conf < 1 - colourSplit}
+                      class:green={detection.conf >= 1 - colourSplit}>
+                      {(Number(detection.conf) * 100).toPrecision(inputParams.conf_digits)}%
+                    </div>
                   </div>
                 </div>
-                {#each currentImg.detections as detection}
-                  <div class="row">
-                    <div class="column">
-                      <div
-                        class="ui large horizontal label"
-                        class:green={categories[detection.category] === 'animal'}
-                        class:grey={categories[detection.category] !== 'animal'}>
-                        {categories[detection.category]}
-                      </div>
-                      {#if currentImg.edited}
-                        <div class="ui large horizontal label">edited</div>
-                      {/if}
-                    </div>
-                    <div class="right aligned column">
-                      <div
-                        class="ui large horizontal label"
-                        class:orange={detection.conf <= confThresh + colourSplit}
-                        class:olive={confThresh + colourSplit < detection.conf && detection.conf < 1 - colourSplit}
-                        class:green={detection.conf >= 1 - colourSplit}>
-                        {(Number(detection.conf) * 100).toPrecision(inputParams.conf_digits)}%
-                      </div>
-                    </div>
+              {:else}
+                <div class="row">
+                  <div class="column">
+                    <div class="ui large black horizontal label">empty</div>
+                    {#if currentImg.edited}
+                      <div class="ui large horizontal label">edited</div>
+                    {/if}
                   </div>
-                {:else}
-                  <div class="row">
-                    <div class="column">
-                      <div class="ui large black horizontal label">empty</div>
-                      {#if currentImg.edited}
-                        <div class="ui large horizontal label">edited</div>
-                      {/if}
-                    </div>
-                    <div class="right aligned column">
-                      <div class="ui large horizontal label">N/A</div>
-                    </div>
+                  <div class="right aligned column">
+                    <div class="ui large horizontal label">N/A</div>
                   </div>
-                {/each}
-              </div>
-            {/if}
+                </div>
+              {/each}
+            </div>
           </div>
           <div style="margin-bottom: 3em;">
             <button
