@@ -5,14 +5,49 @@
   const path = require("path");
   const { dialog } = require("electron").remote;
 
+  var currentResults;
+  var updatedResults;
+
   var images = [];
   var categories;
   var inputParams;
   var confThresh;
   var colourSplit;
   var currentImg;
+  var currentImgIndex;
   var resultsPath;
   var markAs;
+
+  const updateResult = (img, label) => {
+    for (const i of updatedResults.images) {
+      if (path.basename(i.file) === path.basename(img)) {
+        i.edited = true;
+        if (label === "empty") {
+          i.max_detection_conf = 0;
+          i.detections = [];
+        } else if (label === "animal") {
+          // to handle Undo case, check if image had bbox and other data in original results
+          let wasAnimal = false;
+          let pastImg = currentResults.images.filter((i) => {
+            return path.basename(i.file) === path.basename(img);
+          })[0];
+
+          if (pastImg.detections.length > 0) {
+            wasAnimal = true;
+            i.edited = false;
+          }
+          i.max_detection_conf = wasAnimal ? pastImg.max_detection_conf : 1;
+          i.detections.push({
+            category: "1",
+            conf: wasAnimal ? pastImg.detections[0].conf : 1,
+            bbox: wasAnimal ? pastImg.detections[0].bbox : [],
+          });
+        }
+        break;
+      }
+    }
+    nextImage();
+  };
 
   const selectFolder = () => {
     dialog.showOpenDialog({ properties: ["openFile"] }).then((result) => {
@@ -27,15 +62,15 @@
         console.log(`Error reading file from disk: ${err}`);
       } else {
         // parse JSON string to JSON object
-        const results = JSON.parse(data);
-        console.log(results);
-        images = results.images;
-        categories = results.detection_categories;
-        inputParams = results.info.input_params;
+        currentResults = JSON.parse(data);
+        updatedResults = JSON.parse(data); // make a copy to preserve the original
+        images = updatedResults.images;
+        categories = updatedResults.detection_categories;
+        inputParams = updatedResults.info.input_params;
         confThresh = inputParams.render_conf_threshold;
-        console.log(inputParams.conf_digits);
         colourSplit = (1 - confThresh) / 3.0;
         currentImg = images[0];
+        currentImgIndex = 0;
         updateMarkAs();
       }
     });
@@ -50,12 +85,23 @@
   });
 
   const nextImage = () => {
-    images.shift(); // destructive
-    if (images.length == 0) {
-      currentImg = { end: true }; // TODO: some sort of signal needed for UI to signify end
+    if (currentImgIndex + 1 >= images.length) {
+      // end of images
+      // TODO: handle...
+    } else {
+      currentImg = images[currentImgIndex + 1];
+      currentImgIndex += 1;
+      updateMarkAs();
     }
-    currentImg = images[0];
-    updateMarkAs();
+  };
+
+  const prevImage = () => {
+    if (currentImgIndex > 0) {
+      currentImg = images[currentImgIndex - 1];
+      currentImgIndex -= 1;
+      console.log(currentImg.edited);
+      updateMarkAs();
+    }
   };
 </script>
 
@@ -122,6 +168,9 @@
                         class:grey={categories[detection.category] !== 'animal'}>
                         {categories[detection.category]}
                       </div>
+                      {#if currentImg.edited}
+                        <div class="ui large horizontal label">edited</div>
+                      {/if}
                     </div>
                     <div class="right aligned column">
                       <div
@@ -137,6 +186,9 @@
                   <div class="row">
                     <div class="column">
                       <div class="ui large black horizontal label">empty</div>
+                      {#if currentImg.edited}
+                        <div class="ui large horizontal label">edited</div>
+                      {/if}
                     </div>
                     <div class="right aligned column">
                       <div class="ui large horizontal label">N/A</div>
@@ -147,7 +199,9 @@
             {/if}
           </div>
           <div style="margin-bottom: 3em;">
-            <button class="ui left floated compact icon button">
+            <button
+              class="ui left floated compact icon button"
+              on:click={prevImage}>
               <i class="arrow left icon" />
               Prev
             </button>
@@ -157,8 +211,10 @@
               class="ui gray button"
               on:click={() => {
                 window.$('.ui.modal').modal('show');
-              }}>Mark as
-              {markAs}
+              }}>
+              {#if currentImg && currentImg.edited}
+                Undo
+              {:else}Mark as {markAs}{/if}
             </button>
             <button
               class="ui positive button"
@@ -184,7 +240,14 @@
         }}>
         Cancel
       </div>
-      <div class="ui primary button">Yes</div>
+      <div
+        class="ui primary button"
+        on:click={() => {
+          updateResult(currentImg.file, markAs);
+          window.$('.ui.modal').modal('hide');
+        }}>
+        Yes
+      </div>
     </div>
   </div>
 </Page>
