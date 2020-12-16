@@ -57,7 +57,7 @@
     });
   };
 
-  const readResults = async () => {
+  const readResults = () => {
     fs.readFile(resultsPath, "utf8", (err, data) => {
       if (err) {
         console.log(`Error reading file from disk: ${err}`);
