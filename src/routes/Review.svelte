@@ -75,22 +75,36 @@
         </div>
       </div>
     {:else}
-      <div class="ui fluid horizontal card" style="width: 90%;">
+      <div class="ui fluid horizontal card" style="width: 100%;">
         <div>
           <img
             class="ui big image"
-            src={currentImg ? currentImg.preview : ''} />
+            src={currentImg ? currentImg.preview : ''}
+            alt={currentImg ? currentImg.preview : 'Image'} />
         </div>
         <div class="content">
-          <div style="height: 90%;">
-            <h2 class="ui header">Results</h2>
-            <div class="meta">
-              <span
-                class="category">{currentImg ? path.basename(currentImg.preview) : 'Loading...'}
-              </span>
-            </div>
+          <div style="height: 87%;">
             {#if currentImg}
-              <div class="ui aligned two column grid" style="margin-top: 2rem;">
+              <div class="ui aligned two column grid">
+                <div class="row">
+                  <div class="left aligned column">
+                    <h2 class="ui header">Results</h2>
+                  </div>
+                  <div class="right aligned column">
+                    <h2 class="ui header">
+                      <button class="ui compact icon button">
+                        <i class="save icon" />
+                        Save Progress
+                      </button>
+                    </h2>
+                  </div>
+                </div>
+                <div class="meta">
+                  <span
+                    class="category">{currentImg ? path.basename(currentImg.preview) : 'Loading...'}
+                  </span>
+                </div>
+
                 <div class="row">
                   <div class="column">
                     <h3 class="ui header">Label</h3>
@@ -131,6 +145,12 @@
                 {/each}
               </div>
             {/if}
+          </div>
+          <div style="margin-bottom: 3em;">
+            <button class="ui left floated compact icon button">
+              <i class="arrow left icon" />
+              Prev
+            </button>
           </div>
           <div class="ui fluid buttons">
             <button
