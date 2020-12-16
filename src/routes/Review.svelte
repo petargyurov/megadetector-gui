@@ -8,7 +8,6 @@
   var currentResults;
   var updatedResults;
 
-  var images = [];
   var categories;
   var inputParams;
   var confThresh;
@@ -37,11 +36,13 @@
             i.edited = false;
           }
           i.max_detection_conf = wasAnimal ? pastImg.max_detection_conf : 1;
-          i.detections.push({
-            category: "1",
-            conf: wasAnimal ? pastImg.detections[0].conf : 1,
-            bbox: wasAnimal ? pastImg.detections[0].bbox : [],
-          });
+          i.detections = [
+            {
+              category: "1",
+              conf: wasAnimal ? pastImg.detections[0].conf : 1,
+              bbox: wasAnimal ? pastImg.detections[0].bbox : [],
+            },
+          ];
         }
         break;
       }
@@ -64,12 +65,11 @@
         // parse JSON string to JSON object
         currentResults = JSON.parse(data);
         updatedResults = JSON.parse(data); // make a copy to preserve the original
-        images = updatedResults.images;
         categories = updatedResults.detection_categories;
         inputParams = updatedResults.info.input_params;
         confThresh = inputParams.render_conf_threshold;
         colourSplit = (1 - confThresh) / 3.0;
-        currentImg = images[0];
+        currentImg = updatedResults.images[0];
         currentImgIndex = 0;
         updateMarkAs();
       }
@@ -85,21 +85,19 @@
   });
 
   const nextImage = () => {
-    if (currentImgIndex + 1 >= images.length) {
-      // end of images
-      // TODO: handle...
+    if (currentImgIndex + 1 >= updatedResults.images.length) {
+      currentImg = updatedResults.images[currentImgIndex]; // pretend to update image so Svelte can pick up the changes
     } else {
-      currentImg = images[currentImgIndex + 1];
+      currentImg = updatedResults.images[currentImgIndex + 1];
       currentImgIndex += 1;
-      updateMarkAs();
     }
+    updateMarkAs();
   };
 
   const prevImage = () => {
     if (currentImgIndex > 0) {
-      currentImg = images[currentImgIndex - 1];
+      currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
-      console.log(currentImg.edited);
       updateMarkAs();
     }
   };
@@ -201,6 +199,7 @@
           <div style="margin-bottom: 3em;">
             <button
               class="ui left floated compact icon button"
+              class:disabled={currentImgIndex === 0}
               on:click={prevImage}>
               <i class="arrow left icon" />
               Prev
@@ -218,6 +217,7 @@
             </button>
             <button
               class="ui positive button"
+              class:disabled={updatedResults && currentImgIndex === updatedResults.images.length - 1}
               on:click={nextImage}>Correct</button>
           </div>
         </div>
