@@ -225,11 +225,20 @@
     {/if}
   </div>
   <div class="ui tiny modal">
-    <div class="header">Are you sure you want to mark as {markAs}?</div>
+    <div class="header">
+      {#if currentImg && currentImg.edited}
+        Are you sure you want to undo?
+      {:else}Are you sure you want to mark as {markAs}?{/if}
+    </div>
     <div class="content">
       <div class="description">
-        The prediction will be overwritten and the original image will placed in
-        the "{markAs}" folder.
+        {#if currentImg && currentImg.edited}
+          {#if markAs === 'animal'}
+            Bounding box and confidence data will be restored
+          {:else if markAs === 'empty'}Image will be labelled as empty{/if}
+        {:else if markAs === 'animal'}
+          Confidence will be set to 100%. No bounding box data will exist.
+        {:else if markAs === 'empty'}Image will be labelled as empty{/if}
       </div>
     </div>
     <div class="actions">
