@@ -71,6 +71,11 @@
         colourSplit = (1 - confThresh) / 3.0;
         currentImg = updatedResults.images[0];
         currentImgIndex = 0;
+
+        window.$("#progress").progress({
+          total: updatedResults.images.length,
+          percent: ((currentImgIndex + 1) / updatedResults.images.length) * 100,
+        });
         updateMarkAs();
       }
     });
@@ -92,6 +97,9 @@
       currentImgIndex += 1;
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
+    window.$("#progress").progress({
+      percent: ((currentImgIndex + 1) / updatedResults.images.length) * 100,
+    });
     updateMarkAs();
   };
 
@@ -99,6 +107,9 @@
     if (currentImgIndex > 0) {
       currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
+      window.$("#progress").progress({
+        percent: ((currentImgIndex + 1) / updatedResults.images.length) * 100,
+      });
       updateMarkAs();
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
@@ -121,7 +132,9 @@
         </div>
       </div>
     {:else}
-      <div class="ui fluid horizontal card" style="width: 100%;">
+      <div
+        class="ui fluid horizontal card"
+        style="width: 100%; margin-bottom: 0;">
         <div>
           <img
             class="ui big image"
@@ -225,6 +238,9 @@
         </div>
       </div>
     {/if}
+    <div class="ui green bottom attached progress" id="progress">
+      <div class="bar" />
+    </div>
   </div>
   <div class="ui tiny modal">
     <div class="header">
