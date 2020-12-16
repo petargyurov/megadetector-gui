@@ -90,6 +90,7 @@
     } else {
       currentImg = updatedResults.images[currentImgIndex + 1];
       currentImgIndex += 1;
+      window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
     updateMarkAs();
   };
@@ -99,6 +100,7 @@
       currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
       updateMarkAs();
+      window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
   };
 </script>
@@ -252,8 +254,8 @@
       <div
         class="ui primary button"
         on:click={() => {
-          updateResult(currentImg.file, markAs);
           window.$('.ui.modal').modal('hide');
+          updateResult(currentImg.file, markAs);
         }}>
         Yes
       </div>
