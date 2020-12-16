@@ -53,6 +53,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "fomantic-ui": "^2.8.7",
     "jquery": "^3.5.1",
+    "js-image-zoom": "^0.7.0",
     "page": "^1.11.6",
     "sirv-cli": "^1.0.0"
   },

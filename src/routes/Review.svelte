@@ -1,6 +1,8 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import Page from "../components/Page.svelte";
+  import ImageZoom from "js-image-zoom";
+
   const fs = require("fs");
   const path = require("path");
   const { dialog } = require("electron").remote;
@@ -16,6 +18,20 @@
   var currentImgIndex;
   var resultsPath;
   var markAs;
+
+  var options = {
+    width: 600,
+    height: 450,
+    offset: { vertical: 0, horizontal: 10 },
+    zoomPosition: "right",
+    zoomStyle: "z-index: 1000; position: absolute;",
+  };
+
+  const deleteZoom = () => {
+    // this is pretty hacky but I can't find a proper way to use the kill method for ImageZoom
+    window.$(".js-image-zoom__zoomed-area").remove();
+    window.$(".js-image-zoom__zoomed-image").remove();
+  };
 
   const updateResult = (img, label) => {
     for (const i of updatedResults.images) {
@@ -89,6 +105,11 @@
     window.$(".ui.modal").modal();
   });
 
+  afterUpdate(() => {
+    deleteZoom();
+    new ImageZoom(document.getElementById("imageContainer"), options);
+  });
+
   const nextImage = () => {
     if (currentImgIndex + 1 >= updatedResults.images.length) {
       currentImg = updatedResults.images[currentImgIndex]; // pretend to update image so Svelte can pick up the changes
@@ -143,10 +164,12 @@
               {`${currentImgIndex + 1} / ${updatedResults.images.length}`}
             </div>
           </div>
-          <img
-            class="ui big image"
-            src={currentImg.preview}
-            alt={currentImg.preview} />
+          <div id="imageContainer">
+            <img
+              class="ui big image"
+              src={currentImg.preview}
+              alt={currentImg.preview} />
+          </div>
         </div>
         <div class="content">
           <div style="height: 87%;">
