@@ -22,9 +22,10 @@
   var options = {
     width: 600,
     height: 450,
-    offset: { vertical: 0, horizontal: 10 },
+    zoomWidth: 522,
+    offset: { vertical: 0, horizontal: 5 },
     zoomPosition: "right",
-    zoomStyle: "z-index: 1000; position: absolute;",
+    zoomStyle: "z-index: 1000; position: absolute; border-radius: 3px",
   };
 
   const deleteZoom = () => {
