@@ -181,7 +181,11 @@
                 </div>
                 <div class="right aligned column">
                   <h2 class="ui header">
-                    <button class="ui compact icon button">
+                    <button
+                      class="ui compact icon primary button"
+                      on:click={() => {
+                        window.$('#saveModal').modal('show');
+                      }}>
                       <i class="save icon" />
                       Save Progress
                     </button>
@@ -247,7 +251,7 @@
             <button
               class="ui gray button"
               on:click={() => {
-                window.$('.ui.modal').modal('show');
+                window.$('#markModal').modal('show');
               }}>
               {#if currentImg && currentImg.edited}
                 Undo
@@ -265,7 +269,7 @@
       <div class="bar" />
     </div>
   </div>
-  <div class="ui tiny modal">
+  <div class="ui tiny modal" id="markModal">
     <div class="header">
       {#if currentImg && currentImg.edited}
         Are you sure you want to undo?
@@ -297,6 +301,33 @@
           updateResult(currentImg.file, markAs);
         }}>
         Yes
+      </div>
+    </div>
+  </div>
+  <div class="ui tiny modal" id="saveModal">
+    <div class="header">Save Progress</div>
+    <div class="content">
+      <div class="description">
+        This action will move
+        {currentImgIndex}
+        images to their associated folders
+      </div>
+    </div>
+    <div class="actions">
+      <div
+        class="ui button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+        }}>
+        Cancel
+      </div>
+      <div
+        class="ui primary button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+          // TODO: func
+        }}>
+        Save
       </div>
     </div>
   </div>
