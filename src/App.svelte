@@ -16,6 +16,7 @@
   router("/review", () => (page = Review));
   router("/models", () => (page = Models));
   router.start();
+  router.show("/");
 </script>
 
 <style>
