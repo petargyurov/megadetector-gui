@@ -31,7 +31,12 @@
       step: 5,
       smooth: false,
     });
-    window.$("#detectProgressBar").progress();
+    window.$("#detectProgressBar").progress({
+      onSuccess: () => {
+        window.$("#finishedModal").modal("show");
+        window.$("#stopButton").addClass("disabled");
+      },
+    });
   });
 </script>
 
@@ -176,6 +181,28 @@
           stopMegaDetector();
         }}>
         Stop
+      </div>
+    </div>
+  </div>
+  <div class="ui tiny modal" id="finishedModal">
+    <div class="header">Detection completed!</div>
+    <div class="content">
+      <div class="description">
+        <div class="ui placeholder segment">
+          <div class="ui icon header">
+            <i class="green check icon" />
+            All images have been processed.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div
+        class="ui green button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+        }}>
+        OK
       </div>
     </div>
   </div>

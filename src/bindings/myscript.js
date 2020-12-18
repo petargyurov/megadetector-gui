@@ -3,6 +3,18 @@ const kill = require('tree-kill')
 
 let child
 
+// TODO: formalise this entire interface
+
+const runMegaMove = (updatedResultsPath) => {
+  //console.log('running mega move', updatedResultsPath)
+  var executablePath = path.join('engine', 'cli.exe')
+  var parameters = ['move', updatedResultsPath]
+
+  child = require('child_process').execFile(executablePath, parameters, {
+    stdio: ['inherit'],
+  })
+}
+
 const runMegaDetector = () => {
   let modelPath = path.join(process.cwd(), 'engine', 'models', 'md_v4.1.0.pb')
   let inputPath = $('#selectedDirectory').text()
@@ -11,6 +23,7 @@ const runMegaDetector = () => {
 
   var executablePath = path.join('engine', 'cli.exe')
   var parameters = [
+    'detect',
     modelPath,
     inputPath,
     outputPath,
@@ -40,9 +53,10 @@ const runMegaDetector = () => {
       let percent = Number(progressBarInfo[1].replace('%', ''))
       let eta = progressBarInfo[2]
 
-      $('#detectProgressBar').progress({
-        percent: percent,
-      })
+      // $('#detectProgressBar').progress({
+      //   percent: percent,
+      // })
+      $('#detectProgressBar').progress('set percent', percent)
       $('#pos').text(pos)
       $('#eta').text(eta === undefined ? '--:--:--' : eta)
     }
