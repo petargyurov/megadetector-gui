@@ -130,8 +130,7 @@
                 id="stopButton"
                 class="ui right labeled fluid icon red button loading disabled"
                 on:click={() => {
-                  processing = false;
-                  stopMegaDetector();
+                  window.$('#stopModal').modal('show');
                 }}>
                 <i class="stop icon" />
                 Stop
@@ -153,5 +152,31 @@
         </div>
       </div>
     </Card>
+  </div>
+  <div class="ui tiny modal" id="stopModal">
+    <div class="header">Are you sure you want to stop?</div>
+    <div class="content">
+      <div class="description">
+        Images already processed will not be deleted.
+      </div>
+    </div>
+    <div class="actions">
+      <div
+        class="ui button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+        }}>
+        Back
+      </div>
+      <div
+        class="ui red button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+          processing = false;
+          stopMegaDetector();
+        }}>
+        Stop
+      </div>
+    </div>
   </div>
 </Page>
