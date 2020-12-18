@@ -2,6 +2,7 @@
   import { onMount, beforeUpdate, afterUpdate } from "svelte";
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
+  import { backend } from "../bindings.js";
 
   const fs = require("fs");
   const path = require("path");
@@ -141,7 +142,7 @@
     let data = JSON.stringify(updatedResults, null, 4);
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
-    runMegaMove(savePath);
+    backend.move(savePath);
   };
 </script>
 
