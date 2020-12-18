@@ -14,6 +14,8 @@ class BackendInterface {
     kill(this.#childProcess.pid)
   }
 
+  // there is a bug with commonJS (?) that fails to recognize the # character used for private methods
+  // so as a workaround we are using _ as a weak convention for this purpose
   _runExec(params) {
     this.#childProcess = require('child_process').execFile(
       this.#executablePath,
@@ -48,9 +50,7 @@ class BackendInterface {
       '--electron',
     ]
 
-    console.log(this.#childProcess)
     this._runExec(parameters)
-    console.log(this.#childProcess)
 
     this.#childProcess.stdout.on('data', (data) => {
       if (data.startsWith('Processing Images')) {
