@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import Page from "../components/Page.svelte";
   import Card from "../components/Card.svelte";
+  import { backend } from "../bindings.js";
+  const path = require("path");
   const { dialog } = require("electron").remote;
 
   let modelSelected = false;
@@ -125,7 +127,12 @@
                 class="ui right labeled fluid icon green button"
                 on:click={() => {
                   processing = true;
-                  runMegaDetector();
+                  let inputPath = window.$('#selectedDirectory').text();
+                  let outputPath = path.join(inputPath, 'output');
+                  let conf = Number(window
+                        .$('.ui.slider')
+                        .slider('get value')) / 100.0;
+                  backend.detect(inputPath, outputPath, conf);
                 }}>
                 <i class="play icon" />
                 Process
@@ -178,7 +185,11 @@
         on:click={() => {
           window.$('.ui.modal').modal('hide');
           processing = false;
-          stopMegaDetector();
+          backend.stopProcess();
+          // reset UI
+          window.$('#detectProgressBar').progress('set percent', 0);
+          window.$('#pos').text('--/--');
+          window.$('#eta').text('--:--:--');
         }}>
         Stop
       </div>

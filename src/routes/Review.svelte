@@ -136,6 +136,13 @@
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
   };
+
+  const saveUpdatedResults = () => {
+    let data = JSON.stringify(updatedResults, null, 4);
+    let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
+    fs.writeFileSync(savePath, data);
+    runMegaMove(savePath);
+  };
 </script>
 
 <style>
@@ -325,7 +332,7 @@
         class="ui primary button"
         on:click={() => {
           window.$('.ui.modal').modal('hide');
-          // TODO: func
+          saveUpdatedResults();
         }}>
         Save
       </div>

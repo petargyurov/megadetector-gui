@@ -55,7 +55,7 @@
     "jquery": "^3.5.1",
     "js-image-zoom": "^0.7.0",
     "page": "^1.11.6",
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^1.0.10"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
@@ -63,11 +63,11 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "11.0.3",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
-    "rollup": "^2.3.4",
-    "rollup-plugin-css-only": "^3.0.0",
+    "electron": "11.0.3",
+    "rollup": "^2.35.1",
+    "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
