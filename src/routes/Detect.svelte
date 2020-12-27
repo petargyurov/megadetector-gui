@@ -3,6 +3,7 @@
   import Page from "../components/Page.svelte";
   import Card from "../components/Card.svelte";
   import { backend } from "../bindings.js";
+  import router from "page";
   const path = require("path");
   const { dialog } = require("electron").remote;
 
@@ -40,6 +41,17 @@
       },
     });
   });
+
+  const resetUI = () => {
+    processing = false;
+    folderSelected = false;
+    selectedFolder = "";
+    window.$("#detectProgressBar").progress("set percent", 0);
+    window.$("#pos").text("--/--");
+    window.$("#eta").text("--:--:--");
+    window.$(".ui.dropdown").dropdown("clear");
+    window.$(".ui.slider").slider("set value", 50);
+  };
 </script>
 
 <style>
@@ -184,12 +196,8 @@
         class="ui red button"
         on:click={() => {
           window.$('.ui.modal').modal('hide');
-          processing = false;
           backend.stopProcess();
-          // reset UI
-          window.$('#detectProgressBar').progress('set percent', 0);
-          window.$('#pos').text('--/--');
-          window.$('#eta').text('--:--:--');
+          resetUI();
         }}>
         Stop
       </div>
@@ -209,11 +217,21 @@
     </div>
     <div class="actions">
       <div
+        class="ui button"
+        on:click={() => {
+          window.$('.ui.modal').modal('hide');
+          resetUI();
+        }}>
+        Close
+      </div>
+      <div
         class="ui green button"
         on:click={() => {
           window.$('.ui.modal').modal('hide');
+          const resultsPath = path.join(selectedFolder, 'output', 'results.json');
+          router.redirect(`/review/${resultsPath}`);
         }}>
-        OK
+        Human Review
       </div>
     </div>
   </div>

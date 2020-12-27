@@ -10,10 +10,19 @@
   import Models from "./routes/Models.svelte";
 
   let page;
+  let params;
 
   router("/", () => (page = Home));
   router("/detect", () => (page = Detect));
   router("/review", () => (page = Review));
+  router(
+    "/review/:resultsPath",
+    (ctx, next) => {
+      params = ctx.params;
+      next();
+    },
+    () => (page = Review)
+  );
   router("/models", () => (page = Models));
   router.start();
   router.show("/");
@@ -25,6 +34,6 @@
 <main>
   <Sidebar />
   <div class="pusher" style="padding-right: 21em;">
-    <svelte:component this={page} />
+    <svelte:component this={page} {params} />
   </div>
 </main>

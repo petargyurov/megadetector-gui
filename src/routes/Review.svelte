@@ -8,6 +8,8 @@
   const path = require("path");
   const { dialog } = require("electron").remote;
 
+  export let params;
+
   var currentResults;
   var updatedResults;
 
@@ -105,6 +107,10 @@
 
   onMount(async () => {
     window.$(".ui.modal").modal();
+    if (params && params.resultsPath) {
+      resultsPath = params.resultsPath;
+      readResults();
+    }
   });
 
   afterUpdate(() => {
