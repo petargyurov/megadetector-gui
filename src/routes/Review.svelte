@@ -95,7 +95,6 @@
 
         // progress tracks reviewed images, not image index
         window.$("#progress").progress({
-          // total: updatedResults.images.length,
           percent: (numReviewedImgs / updatedResults.images.length) * 100,
           onSuccess: () => {
             window.$("#finishedModal").modal("show");
