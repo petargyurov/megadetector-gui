@@ -1,5 +1,6 @@
 const path = require('path')
 const kill = require('tree-kill')
+import router from 'page'
 
 class BackendInterface {
   // Private field
@@ -29,6 +30,11 @@ class BackendInterface {
   move(updatedResultsPath) {
     const parameters = ['move', updatedResultsPath]
     this._runExec(parameters)
+
+    this.#childProcess.on('exit', function () {
+      $('.ui.primary.button').removeClass('loading')
+      $('.ui.modal').modal('hide')
+    })
   }
 
   detect(inputPath, outputPath, conf) {

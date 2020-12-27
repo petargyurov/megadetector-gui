@@ -19,6 +19,7 @@
   var colourSplit;
   var currentImg;
   var currentImgIndex;
+  var numReviewedImgs = 0;
   var resultsPath;
   var markAs;
 
@@ -92,9 +93,13 @@
         currentImg = updatedResults.images[0];
         currentImgIndex = 0;
 
+        // progress tracks reviewed images, not image index
         window.$("#progress").progress({
-          total: updatedResults.images.length,
-          percent: ((currentImgIndex + 1) / updatedResults.images.length) * 100,
+          // total: updatedResults.images.length,
+          percent: (numReviewedImgs / updatedResults.images.length) * 100,
+          onSuccess: () => {
+            window.$("#finishedModal").modal("show");
+          },
         });
         updateMarkAs();
       }
@@ -119,6 +124,7 @@
   });
 
   const nextImage = () => {
+    currentImg.reviewed = true;
     if (currentImgIndex + 1 >= updatedResults.images.length) {
       currentImg = updatedResults.images[currentImgIndex]; // pretend to update image so Svelte can pick up the changes
     } else {
@@ -126,9 +132,19 @@
       currentImgIndex += 1;
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
-    window.$("#progress").progress({
-      percent: ((currentImgIndex + 1) / updatedResults.images.length) * 100,
-    });
+
+    if (numReviewedImgs <= updatedResults.images.length - 1) {
+      numReviewedImgs += 1;
+    }
+
+    // update percent
+    window
+      .$("#progress")
+      .progress(
+        "set percent",
+        (numReviewedImgs / updatedResults.images.length) * 100
+      );
+
     updateMarkAs();
   };
 
@@ -136,15 +152,13 @@
     if (currentImgIndex > 0) {
       currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
-      window.$("#progress").progress({
-        percent: ((currentImgIndex + 1) / updatedResults.images.length) * 100,
-      });
       updateMarkAs();
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
   };
 
   const saveUpdatedResults = () => {
+    window.$(".ui.primary.button").addClass("loading");
     let data = JSON.stringify(updatedResults, null, 4);
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
@@ -176,7 +190,7 @@
             <i class="images outline icon" />
             {path.basename(currentImg.file)}
             <div class="detail">
-              {`${currentImgIndex + 1} / ${updatedResults.images.length}`}
+              {`${currentImgIndex + 1 <= updatedResults.images.length ? currentImgIndex + 1 : currentImgIndex} / ${updatedResults.images.length}`}
             </div>
           </div>
           <div id="imageContainer">
@@ -273,7 +287,6 @@
             </button>
             <button
               class="ui positive button"
-              class:disabled={updatedResults && currentImgIndex === updatedResults.images.length - 1}
               on:click={nextImage}>Correct</button>
           </div>
         </div>
@@ -338,7 +351,35 @@
       <div
         class="ui primary button"
         on:click={() => {
+          saveUpdatedResults();
+        }}>
+        Save
+      </div>
+    </div>
+  </div>
+  <div class="ui tiny modal" id="finishedModal">
+    <div class="header">Review completed!</div>
+    <div class="content">
+      <div class="description">
+        <div class="ui placeholder segment">
+          <div class="ui icon header">
+            <i class="green check icon" />
+            All images have been reviewed
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div
+        class="ui button"
+        on:click={() => {
           window.$('.ui.modal').modal('hide');
+        }}>
+        Close
+      </div>
+      <div
+        class="ui primary button"
+        on:click={() => {
           saveUpdatedResults();
         }}>
         Save
