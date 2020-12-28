@@ -129,6 +129,7 @@
     } else {
       currentImg = updatedResults.images[currentImgIndex + 1];
       currentImgIndex += 1;
+      window.$(".ui.big.image, .horizontal.label").transition("stop");
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
 
@@ -152,6 +153,7 @@
       currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
       updateMarkAs();
+      window.$(".ui.big.image, .horizontal.label").transition("stop");
       window.$(".ui.big.image, .horizontal.label").transition("pulse");
     }
   };
