@@ -10,20 +10,20 @@
 
   export let params;
 
-  var currentResults;
-  var updatedResults;
+  let currentResults;
+  let updatedResults;
 
-  var categories;
-  var inputParams;
-  var confThresh;
-  var colourSplit;
-  var currentImg;
-  var currentImgIndex;
-  var numReviewedImgs = 0;
-  var resultsPath;
-  var markAs;
+  let categories;
+  let inputParams;
+  let confThresh;
+  let colourSplit;
+  let currentImg;
+  let currentImgIndex;
+  let numReviewedImgs = 0;
+  let resultsPath;
+  let markAs;
 
-  var options = {
+  let options = {
     width: 600,
     height: 450,
     zoomWidth: 522,
