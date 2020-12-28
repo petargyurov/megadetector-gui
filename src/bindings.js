@@ -1,6 +1,5 @@
 const path = require('path')
 const kill = require('tree-kill')
-import router from 'page'
 
 class BackendInterface {
   // Private field
@@ -37,7 +36,7 @@ class BackendInterface {
     })
   }
 
-  detect(inputPath, outputPath, conf) {
+  detect(inputPath, outputPath, conf, autosort) {
     const modelPath = path.join(
       process.cwd(),
       'engine',
@@ -54,6 +53,7 @@ class BackendInterface {
       '-ot',
       conf,
       '--electron',
+      autosort ? '--auto-sort' : '--no-auto-sort',
     ]
 
     this._runExec(parameters)

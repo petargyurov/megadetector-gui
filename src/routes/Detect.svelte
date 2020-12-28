@@ -11,6 +11,7 @@
   let folderSelected = false;
   let selectedFolder = "";
   let processing = false;
+  let autosort = false;
 
   const selectFolder = () => {
     dialog.showOpenDialog({ properties: ["openDirectory"] }).then((result) => {
@@ -38,6 +39,11 @@
       onSuccess: () => {
         window.$("#finishedModal").modal("show");
         window.$("#stopButton").addClass("disabled");
+      },
+    });
+    window.$(".ui.checkbox").checkbox({
+      onChange: () => {
+        autosort = !autosort;
       },
     });
   });
@@ -114,6 +120,21 @@
                 id="slider-1" />
             </div>
           </div>
+          <div class="row">
+            <div class="column">
+              <h4 class="ui header" style="margin-bottom: 0;">Auto-sort</h4>
+              <div class="meta">
+                <span>Skip human review and automatically put original images in
+                  categorised folders</span>
+              </div>
+            </div>
+            <div class="column">
+              <div class="ui toggle checkbox">
+                <input type="checkbox" name="autosort" />
+                <label for="autosort" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Card>
@@ -144,7 +165,7 @@
                   let conf = Number(window
                         .$('.ui.slider')
                         .slider('get value')) / 100.0;
-                  backend.detect(inputPath, outputPath, conf);
+                  backend.detect(inputPath, outputPath, conf, autosort);
                 }}>
                 <i class="play icon" />
                 Process
@@ -211,6 +232,12 @@
           <div class="ui icon header">
             <i class="green check icon" />
             All images have been processed.
+            {#if autosort}
+              <div>
+                <span class="ui red text">(Some images may still be undergoing
+                  auto-sorting)</span>
+              </div>
+            {/if}
           </div>
         </div>
       </div>
@@ -224,15 +251,17 @@
         }}>
         Close
       </div>
-      <div
-        class="ui green button"
-        on:click={() => {
-          window.$('.ui.modal').modal('hide');
-          const resultsPath = path.join(selectedFolder, 'output', 'results.json');
-          router.redirect(`/review/${resultsPath}`);
-        }}>
-        Human Review
-      </div>
+      {#if !autosort}
+        <div
+          class="ui green button"
+          on:click={() => {
+            window.$('.ui.modal').modal('hide');
+            const resultsPath = path.join(selectedFolder, 'output', 'results.json');
+            router.redirect(`/review/${resultsPath}`);
+          }}>
+          Human Review
+        </div>
+      {/if}
     </div>
   </div>
 </Page>
