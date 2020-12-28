@@ -90,8 +90,16 @@
         inputParams = updatedResults.info.input_params;
         confThresh = inputParams.render_conf_threshold;
         colourSplit = (1 - confThresh) / 3.0;
-        currentImg = updatedResults.images[0];
         currentImgIndex = 0;
+
+        const alreadySeen = currentResults.images.filter(
+          (i) => i.reviewed === true
+        ).length;
+        if (alreadySeen > 0) {
+          currentImgIndex = alreadySeen;
+          numReviewedImgs = alreadySeen;
+        }
+        currentImg = updatedResults.images[currentImgIndex];
 
         // progress tracks reviewed images, not image index
         window.$("#progress").progress({
