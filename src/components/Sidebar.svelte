@@ -1,4 +1,6 @@
 <script>
+  const app = require("electron").remote.app;
+  const version = app.getVersion();
 </script>
 
 <style>
@@ -11,7 +13,7 @@
     <h3>
       <i class="circular crosshairs icon" />
       MegaDetector
-      <span class="ui tiny grey text">v0.1</span>
+      <span class="ui tiny grey text">v{version}</span>
     </h3>
   </div>
 
