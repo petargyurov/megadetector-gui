@@ -7,7 +7,7 @@
 
 <div
   class="ui one column divided grid container"
-  style="margin-left: 1em; margin-top: 1em;">
+  style="margin-left: 1em; padding-top: 1em;">
   <div class="row">
     <div class="column">
       <h1 class="ui header">{title}</h1>
