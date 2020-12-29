@@ -7,7 +7,7 @@
   import Home from "./routes/Home.svelte";
   import Detect from "./routes/Detect.svelte";
   import Review from "./routes/Review.svelte";
-  import Models from "./routes/Models.svelte";
+  import Documentation from "./routes/Documentation.svelte";
 
   let page;
   let params;
@@ -23,7 +23,7 @@
     },
     () => (page = Review)
   );
-  router("/models", () => (page = Models));
+  router("/documentation", () => (page = Documentation));
   router.start();
   router.show("/");
 </script>

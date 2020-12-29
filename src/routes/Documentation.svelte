@@ -5,4 +5,4 @@
 <style>
 </style>
 
-<Page title="Models" />
+<Page title="Documentation" />
