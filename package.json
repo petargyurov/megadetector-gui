@@ -1,24 +1,47 @@
 {
+  "author": {
+    "name": "Petar Gyurov",
+    "email": "pgyurov93@gmail.com"
+  },
   "name": "megadetector-gui",
-  "productName": "megadetector-gui",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "0.0.1",
+  "description": "Machine learning powered tool for sorting camera trap images",
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently \"npm:sv-dev\" \"electron-forge start\"",
+    "start": "set APP_DEV=true && concurrently \"npm:sv-dev\" \"electron-forge start\"",
+    "startProd": "set APP_DEV=false && concurrently \"npm:sv-start\" \"electron-forge start\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "sv-build": "rollup -c",
     "sv-dev": "rollup -c -w",
     "sv-start": "sirv public",
-    "semantic-build": "npx gulp --gulpfile ./semantic/gulpfile.js build"
+    "semantic-build": "npx gulp --gulpfile ./semantic/gulpfile.js build",
+    "build": "npm run sv-build && electron-builder"
+  },
+  "build": {
+    "appId": "megadetector-gui",
+    "productName": "MegaDetector",
+    "copyright": "Copyright © 2019 ${author}",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "src/assets/icon.ico"
+    },
+    "nsis": {
+      "installerIcon": "src/assets/icon.ico",
+      "uninstallerIcon": "src/assets/uninstall.ico",
+      "uninstallDisplayName": "MegaDetector",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extraFiles": [
+      "engine/models/*",
+      "engine/cli.exe"
+    ]
   },
   "keywords": [],
-  "author": {
-    "name": "Petar Gyurov",
-    "email": "pgyurov93@gmail.com"
-  },
   "license": "MIT",
   "config": {
     "forge": {
@@ -66,6 +89,7 @@
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "electron": "11.0.3",
+    "electron-builder": "^22.9.1",
     "rollup": "^2.35.1",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",

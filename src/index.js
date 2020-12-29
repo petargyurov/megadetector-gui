@@ -1,10 +1,14 @@
 const { app, BrowserWindow, Menu } = require('electron')
 const path = require('path')
 
-require('electron-reload')(__dirname, {
-  electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
-  awaitWriteFinish: true,
-})
+const isDev = process.env.APP_DEV ? process.env.APP_DEV.trim() == 'true' : false
+
+if (isDev) {
+  require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
+    awaitWriteFinish: true,
+  })
+}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -17,6 +21,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1470,
     height: 900,
+    icon: path.join(__dirname, 'assets/icon.ico'),
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -27,12 +32,9 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, '../public/index.html'))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
-}
-
-const createMenus = () => {
-  // disable system menus for now
-  Menu.setApplicationMenu(null)
+  if (isDev) {
+    mainWindow.webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished
@@ -40,7 +42,9 @@ const createMenus = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow()
-  //createMenus()
+  if (!isDev) {
+    Menu.setApplicationMenu(null) // disable system menus for now
+  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
