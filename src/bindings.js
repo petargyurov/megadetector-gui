@@ -2,23 +2,23 @@ const path = require('path')
 const kill = require('tree-kill')
 
 class BackendInterface {
-  // Private field
-  #executablePath
-  #childProcess
+  // ideally these would be made private with the # character but support for this feature is limited in various dependencies
+  executablePath
+  childProcess
 
   constructor(path) {
-    this.#executablePath = path
+    this.executablePath = path
   }
 
   stopProcess = () => {
-    kill(this.#childProcess.pid)
+    kill(this.childProcess.pid)
   }
 
   // there is a bug with commonJS (?) that fails to recognize the # character used for private methods
   // so as a workaround we are using _ as a weak convention for this purpose
   _runExec(params) {
-    this.#childProcess = require('child_process').execFile(
-      this.#executablePath,
+    this.childProcess = require('child_process').execFile(
+      this.executablePath,
       params,
       {
         stdio: ['inherit'],
@@ -30,7 +30,7 @@ class BackendInterface {
     const parameters = ['move', updatedResultsPath]
     this._runExec(parameters)
 
-    this.#childProcess.on('exit', function () {
+    this.childProcess.on('exit', function () {
       $('.ui.primary.button').removeClass('loading')
       $('.ui.modal').modal('hide')
     })
@@ -58,7 +58,7 @@ class BackendInterface {
 
     this._runExec(parameters)
 
-    this.#childProcess.stdout.on('data', (data) => {
+    this.childProcess.stdout.on('data', (data) => {
       if (data.startsWith('Processing Images')) {
         if ($('#stopButton').hasClass('loading')) {
           $('#stopButton').removeClass('loading disabled')
@@ -79,7 +79,7 @@ class BackendInterface {
       }
     })
 
-    this.#childProcess.stderr.on('data', (data) => {
+    this.childProcess.stderr.on('data', (data) => {
       console.log('stderr', data)
     })
   }
