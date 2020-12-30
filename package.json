@@ -36,6 +36,16 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
+    "extraResources": [
+      {
+        "from": "src/assets",
+        "to": "assets",
+        "filter": [
+          "**/*",
+          "!*.ico"
+        ]
+      }
+    ],
     "extraFiles": [
       "engine/models/*",
       "engine/cli.exe"

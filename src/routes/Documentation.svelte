@@ -3,6 +3,10 @@
   import { onMount } from "svelte";
   const path = require("path");
 
+  const isDev = process.env.APP_DEV
+    ? process.env.APP_DEV.trim() == "true"
+    : false;
+
   onMount(async () => {
     window.$(".ui.accordion").accordion();
   });
@@ -180,7 +184,7 @@
             data-position="bottom left">
             <img
               class="ui large image"
-              src={path.join(process.cwd(), 'src', 'assets', 'demo.JPG')}
+              src={isDev ? path.join(process.cwd(), 'src', 'assets', 'demo.JPG') : path.join(process.cwd(), 'resources', 'assets', 'demo.JPG')}
               alt="demo" />
           </div>
         </div>
