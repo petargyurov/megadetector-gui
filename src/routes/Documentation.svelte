@@ -25,6 +25,8 @@
     { question: "Does the model output its bounding box data?", answer: "" },
     { question: "How do I resume my review?", answer: "" },
     { question: "How do I request a feature?", answer: "" },
+    // can i undo
+    // multiple classifications
   ];
 </script>
 
@@ -270,8 +272,64 @@
       </div>
       <!-- UI DEMO -->
 
-      <h2 class="ui sub header">3.2 Reviewing</h2>
-      <h2 class="ui sub header">3.3 Saving Progress</h2>
+      <h2 class="ui sub header">3.2 Correcting an "empty" classification</h2>
+      <div>
+        If you come across an image with an animal but the detector didn't find
+        anything (or wasn't confident enough about its prediction), you can
+        click the
+        <button class="ui compact button">Mark as animal</button>
+        button. A pop-up window will ask you to confirm. Note that you won't be
+        able to add bounding box data.
+      </div>
+      <h2 class="ui sub header">3.3 Correcting an "animal" classification</h2>
+      <div>
+        If the detector has incorrectly detected something in the image as an
+        animal then clicking the
+        <button class="ui compact button">Mark as empty</button>
+        button will remove the incorrect classification and bounding box data.
+      </div>
+      <h2 class="ui sub header">3.4 Undoing</h2>
+      <div>
+        If you have made a mistake, you can use the
+        <button class="ui small compact icon button">
+          <i class="arrow left icon" />
+          Prev
+        </button>
+        button to go back to the image in question. If you have re-classified
+        something, you can
+        <button class="ui compact button">Undo</button>
+        it. Bounding box data will be restored (if it existed).
+      </div>
+      <h2 class="ui sub header">3.5 Saving Progress</h2>
+      <div>
+        The application will remember when you accept or correct classifications
+        but will not physically save your progress anywhere. When you press the
+        <button class="ui small compact icon primary button">
+          <i class="save icon" />
+          Save Progress
+        </button>
+        button, the application will generate a new file called
+        <span class="ui label">
+          <i class="file icon" />updated_results.json
+        </span>
+        and it will move the images you have reviewed to their respective
+        folder, i.e.:
+        <span class="ui label"> <i class="folder icon" />animal</span>
+        or
+        <span class="ui label"> <i class="folder icon" />empty</span>
+      </div>
+      <h2 class="ui sub header">3.6 Reviewing at a different time</h2>
+      <div>
+        If you have finished the detection process but wish to review its
+        results at a later time you can navigate to the Review page and import
+        the
+        <span class="ui label"><i class="file icon" />results.json</span>
+        file. If you are resuming a previous review session then you need to
+        import the
+        <span class="ui label"><i class="file icon" />updated_results.json
+        </span>
+        file.
+      </div>
     </div>
 
     <div class="ui divider" />
