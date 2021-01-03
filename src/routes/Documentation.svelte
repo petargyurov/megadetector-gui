@@ -70,6 +70,11 @@
 
 <Page title="Documentation">
   <div class="column">
+    <div class="ui breadcrumb">
+      <div class="active section"><a href="#top">Getting Started</a></div>
+      <div class="divider">/</div>
+      <div class="section"><a href="#faqs">FAQs</a></div>
+    </div>
     <div class="ui segment">
       <h2 class="ui header">Getting Started</h2>
       <p>
@@ -368,8 +373,13 @@
     </div>
 
     <div class="ui divider" />
-    <h2 class="ui header">FAQs</h2>
-    <div class="ui styled fluid accordion">
+    <div class="ui breadcrumb">
+      <div class="section"><a href="#top">Getting Started</a></div>
+      <div class="divider">/</div>
+      <div class="active section"><a href="#faqs">FAQs</a></div>
+    </div>
+    <h2 id="faqs" class="ui header">FAQs</h2>
+    <div class="ui styled fluid accordion" style="margin-bottom: 50px;">
       {#each faqs as faq}
         <div class="ui medium header title">
           <i class="dropdown icon" />
