@@ -9,57 +9,64 @@
 
   onMount(async () => {
     window.$(".ui.accordion").accordion();
+    window.$(".ui.search").search({
+      source: faqs,
+      onSelect: (answer) => {
+        window.location.replace(`#q${answer.id - 1}`);
+        window.$(".ui.accordion").accordion("toggle", answer.id - 1);
+      },
+    });
   });
 
   const faqs = [
     {
-      question: "What is auto-sort?",
-      answer:
+      title: "What is auto-sort?",
+      description:
         "Enabling auto-sort will simply skip the human review process and automatically move the original images into folders based on the model's predictions. This means some images may be categorised incorrectly.",
     },
     {
-      question: "Are the original images affected during detection?",
-      answer: `No. The detector will make copies of your images on which it will draw bounding boxes. 
+      title: "Are the original images affected during detection?",
+      description: `No. The detector will make copies of your images on which it will draw bounding boxes. 
         Image location also remains unchanged during detection, unless you enable the Auto-sort option, 
         which will move your images into labelled folders at the end of the detection process.`,
     },
     {
-      question: "What classifications can I expect to see?",
-      answer: "Currently, only 'animal' and 'empty'",
+      title: "What classifications can I expect to see?",
+      description: "Currently, only 'animal' and 'empty'",
     },
     {
-      question: "Can I train the model on my own data?",
-      answer: `Short answer: no. Long answer: you can train the underlying MegaDetector model yourself but 
+      title: "Can I train the model on my own data?",
+      description: `Short answer: no. Long answer: you can train the underlying MegaDetector model yourself but 
         the application currently does not support an official way to import new models. 
         This is something that will be addressed in a later release. For a 'hacky' solution, you can 
         replace the model under /engine/models/ in the app's installation directory with your trained model; the name must be the same.`,
     },
     {
-      question: "What do I with the contents of the 'output' folder?",
-      answer: `The folder contains copies of the original images with bounding boxes drawn. 
+      title: "What do I with the contents of the 'output' folder?",
+      description: `The folder contains copies of the original images with bounding boxes drawn. 
               It also contains the 'results.json' file which holds classification and bounding 
               box data for each image. This data is required if you wish to carry out a review of the model's predictions. 
               Once you have reviewed all the images in question, you are free to do what you want with this folder and its contents. 
               It is advisable to keep the 'results.json' file as bounding box data is valuable.`,
     },
     {
-      question: "Does the model output its bounding box data?",
-      answer:
+      title: "Does the model output its bounding box data?",
+      description:
         "Yes. You can find this data in the 'results.json' file in the 'output' folder",
     },
     {
-      question: "How do I resume my review?",
-      answer:
+      title: "How do I resume my review?",
+      description:
         "Go to the Review page and import 'results.json' file. If you are continuing an already started review, import the 'updated_results.json' file",
     },
     {
-      question: "How do I request a feature?",
-      answer:
+      title: "How do I request a feature?",
+      description:
         "Create an issue at the project's GitHub page: https://github.com/petargyurov/megadetector-gui",
     },
     {
-      question: "Can I undo my classification change?",
-      answer:
+      title: "Can I undo my classification change?",
+      description:
         "Yes. Use the 'Prev' button to go back to a previous image and the Undo button will be available.",
     },
   ];
@@ -70,6 +77,13 @@
 
 <Page title="Documentation">
   <div class="column">
+    <div class="ui search">
+      <div class="ui icon input">
+        <input class="prompt" type="text" placeholder="Search FAQs" />
+        <i class="search icon" />
+      </div>
+      <div class="results" />
+    </div>
     <div class="ui breadcrumb">
       <div class="active section"><a href="#top">Getting Started</a></div>
       <div class="divider">/</div>
@@ -380,13 +394,14 @@
     </div>
     <h2 id="faqs" class="ui header">FAQs</h2>
     <div class="ui styled fluid accordion" style="margin-bottom: 50px;">
-      {#each faqs as faq}
-        <div class="ui medium header title">
+      {#each faqs as faq, i}
+        <div id={`q${i}`} class="ui medium header title">
           <i class="dropdown icon" />
-          {faq.question}
+          {(faq.id = i + 1)}.
+          {faq.title}
         </div>
         <div class="content">
-          <p>{faq.answer}</p>
+          <p>{faq.description}</p>
         </div>
       {/each}
     </div>
