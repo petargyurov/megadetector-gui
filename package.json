@@ -42,7 +42,7 @@
         "to": "assets",
         "filter": [
           "**/*",
-          "!*.ico"
+          "uninstall.ico"
         ]
       }
     ],

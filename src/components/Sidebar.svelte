@@ -1,6 +1,10 @@
 <script>
+  const path = require("path");
   const app = require("electron").remote.app;
   const version = app.getVersion();
+  const isDev = process.env.APP_DEV
+    ? process.env.APP_DEV.trim() == "true"
+    : false;
 </script>
 
 <style>
@@ -11,7 +15,10 @@
   style="background-color: #f8f9fa; border: 0; box-shadow: 1;">
   <div style="padding: 1em; margin-bottom: 1em;">
     <h3>
-      <i class="circular crosshairs icon" />
+      <img
+        class="ui avatar image"
+        src={isDev ? path.join(process.cwd(), 'src', 'assets', 'icon.ico') : path.join(process.cwd(), 'resources', 'assets', 'icon.ico')}
+        alt="logo" />
       MegaDetector
       <span class="ui tiny grey text">v{version}</span>
     </h3>
