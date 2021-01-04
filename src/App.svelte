@@ -24,6 +24,7 @@
     () => (page = Review)
   );
   router("/documentation", () => (page = Documentation));
+  router("*", () => null); // TODO: why does this work?
   router.start();
   router.show("/");
 </script>
