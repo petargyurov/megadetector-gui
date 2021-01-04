@@ -95,60 +95,88 @@
   <div class="row">
     <div class="column">
       <h2 class="ui header">Getting Started</h2>
-      <div class="ui styled fluid accordion">
-        <div class="title"><i class="dropdown icon" />Show me</div>
-        <div class="content">
-          <p>
-            This application is used to speed up the manual process of filtering
-            camera trap images. Camera traps can be set off by moving
-            vegetation, debris and other factors that are not of interest; this
-            results in tens or hundreds of empty images.
-          </p>
-          <p>
-            In an effort to improve this mundane task, we can detect whether an
-            animal is in the image using machine learning models. After the
-            model makes its predictions, a human reviewer can quickly approve or
-            correct the output for each image.
-          </p>
-          <p>
-            At the end, the application will move each original image into
-            either an
-            <span class="ui label"> <i class="folder icon" />animal</span>
-            or an
-            <span class="ui label"> <i class="folder icon" />empty</span>
-            folder, as well as produce bounding box data for its predictions.
-          </p>
-          <h2 class="ui sub header">The typical flow</h2>
-          <div class="ui three fluid steps">
-            <div class="step">
-              <i class="cogs icon" />
-              <div class="content">
-                <div class="title">Configure</div>
-                <div class="description">
-                  Import data and tell the model how strict it should be
-                </div>
-              </div>
-            </div>
-            <div class="step">
-              <i class="eye icon" />
-              <div class="content">
-                <div class="title">Detect</div>
-                <div class="description">
-                  Model tries to spot animals in your images
-                </div>
-              </div>
-            </div>
-            <div class="step">
-              <i class="edit icon" />
-              <div class="content">
-                <div class="title">Review</div>
-                <div class="description">
-                  Go through the model's predictions and correct them
-                </div>
-              </div>
+      <p>
+        This application is used to speed up the manual process of filtering
+        camera trap images. Camera traps can be set off by moving vegetation,
+        debris and other factors that are not of interest; this results in tens
+        or hundreds of empty images.
+      </p>
+      <p>
+        In an effort to improve this mundane task, we can detect whether an
+        animal is in the image using machine learning models. After the model
+        makes its predictions, a human reviewer can quickly approve or correct
+        the output for each image.
+      </p>
+      <p>
+        At the end, the application will move each original image into either an
+        <span class="ui label"> <i class="folder icon" />animal</span>
+        or an
+        <span class="ui label"> <i class="folder icon" />empty</span>
+        folder, as well as produce bounding box data for its predictions.
+      </p>
+      <h2 class="ui sub header">The typical flow</h2>
+      <div class="ui three fluid steps">
+        <div
+          id="step1"
+          class="link step"
+          on:click={(x) => {
+            window.$('#stepsAccordion').accordion('toggle', 0);
+            window.$('#step1').toggleClass('active');
+            window.$('#step2').removeClass('active');
+            window.$('#step3').removeClass('active');
+          }}>
+          <i class="cogs icon" />
+          <div class="content">
+            <div class="title">Configure</div>
+            <div class="description">
+              Import data and tell the model how strict it should be
             </div>
           </div>
-          <h3 class="ui header">Step 1: Configuration</h3>
+        </div>
+        <div
+          id="step2"
+          class="link step"
+          on:click={() => {
+            window.$('#stepsAccordion').accordion('toggle', 1);
+            window.$('#step1').removeClass('active');
+            window.$('#step2').toggleClass('active');
+            window.$('#step3').removeClass('active');
+          }}>
+          <i class="eye icon" />
+          <div class="content">
+            <div class="title">Detect</div>
+            <div class="description">
+              Model tries to spot animals in your images
+            </div>
+          </div>
+        </div>
+        <div
+          id="step3"
+          class="link step"
+          on:click={() => {
+            window.$('#stepsAccordion').accordion('toggle', 2);
+            window.$('#step1').removeClass('active');
+            window.$('#step2').removeClass('active');
+            window.$('#step3').toggleClass('active');
+          }}>
+          <i class="edit icon" />
+          <div class="content">
+            <div class="title">Review</div>
+            <div class="description">
+              Go through the model's predictions and correct them
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="stepsAccordion"
+        class="ui styled fluid accordion"
+        style="margin-bottom: 20px;">
+        <div class="ui medium header title">
+          <i class="dropdown icon" />
+          Step 1: Configure
+        </div>
+        <div class="content">
           <p>
             Open the Detect page. The following will explain how to configure
             the detection procedure.
@@ -177,7 +205,12 @@
             and automatically move the original images based on the predictions
             it just made.
           </p>
-          <h3 class="ui header">Step 2: Detection</h3>
+        </div>
+        <div class="ui medium header title">
+          <i class="dropdown icon" />
+          Step 2: Detect
+        </div>
+        <div class="content">
           <p>
             With the configuration all done, it's time to initiate the detection
             process.
@@ -214,7 +247,12 @@
             And of course the progress bar will show the overall progress as a
             percentage.
           </p>
-          <h3 class="ui header">Step 3: Review</h3>
+        </div>
+        <div class="ui medium header title">
+          <i class="dropdown icon" />
+          Step 3: Review
+        </div>
+        <div class="content">
           <p>
             Once the detection finishes, a pop-up window will be displayed
             asking you to continue to the Review process. You may decline and
@@ -333,7 +371,6 @@
             </div>
           </div>
           <!-- UI DEMO -->
-
           <h2 class="ui sub header">
             3.2 Correcting an "empty" classification
           </h2>
@@ -400,6 +437,7 @@
           </div>
         </div>
       </div>
+
       <h2 id="faqs" class="ui header">FAQs</h2>
       <div
         id="faqsAccordion"
