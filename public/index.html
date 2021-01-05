@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-    <title>MegaDetector</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MegaDetector</title>
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="stylesheet" href="../semantic/dist/semantic.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="stylesheet" type="text/css" href="/build/dist/semantic.min.css">
 
-    <!-- jQuery Fix  -->
-    <script>
-      if (typeof module === 'object') {
-        window.module = module
-        module = undefined
-      }
-    </script>
+  <!-- jQuery Fix  -->
+  <script>
+    if (typeof module === 'object') {
+      window.module = module
+      module = undefined
+    }
+  </script>
 
-    <!-- Normal Imports -->
-    <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../semantic/dist/semantic.js"></script>
-    <script defer src="./build/bundle.js"></script>
+  <!-- Normal Imports -->
+  <script src="/build/jquery.min.js"></script>
+  <script defer src="/build/bundle.js"></script>
+  <script src="/build/dist/semantic.min.js"></script>
 
-    <!-- jQuery Fix -->
-    <script>
-      if (window.module) module = window.module
-    </script>
-  </head>
+  <!-- jQuery Fix -->
+  <script>
+    if (window.module) module = window.module
+  </script>
+</head>
 
-  <body></body>
+<body></body>
+
 </html>

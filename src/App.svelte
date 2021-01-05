@@ -24,9 +24,8 @@
     () => (page = Review)
   );
   router("/documentation", () => (page = Documentation));
-  router("*", () => null); // TODO: why does this work?
+
   router.start();
-  router.show("/");
 
   // Configure a toast for general error handling
   const displayErrorToast = (type, error) => {

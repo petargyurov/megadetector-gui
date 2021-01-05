@@ -28,13 +28,14 @@ const createWindow = () => {
     },
   })
 
-  // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, '../public/index.html'))
+  mainWindow.loadURL("http://localhost:5000")
+  mainWindow.webContents.openDevTools()
 
-  // Open the DevTools.
-  if (isDev) {
-    mainWindow.webContents.openDevTools()
-  }
+  // if (isDev) {
+  //   // Open the DevTools and serve svelte localhost
+  //   mainWindow.loadURL("http://localhost:5000")
+  //   mainWindow.webContents.openDevTools()
+  // }
 }
 
 // This method will be called when Electron has finished

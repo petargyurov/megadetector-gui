@@ -8,16 +8,12 @@
   "description": "Machine learning powered tool for sorting camera trap images",
   "main": "src/index.js",
   "scripts": {
-    "start": "set APP_DEV=true && concurrently \"npm:sv-dev\" \"electron-forge start\"",
-    "startProd": "set APP_DEV=false && concurrently \"npm:sv-start\" \"electron-forge start\"",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "sv-build": "rollup -c",
+    "electron": "wait-on http://localhost:5000 && electron .",
     "sv-dev": "rollup -c -w",
-    "sv-start": "sirv public",
-    "semantic-build": "npx gulp --gulpfile ./semantic/gulpfile.js build",
-    "build": "npm run sv-build && electron-builder"
+    "sv-build": "rollup -c",
+    "sv-start": "sirv public --single",
+    "dev": "set APP_DEV=true && concurrently \"npm:sv-dev\"  \"npm:electron\"",
+    "semantic-build": "npx gulp --gulpfile ./semantic/gulpfile.js build"
   },
   "build": {
     "appId": "megadetector-gui",
@@ -53,36 +49,8 @@
   },
   "keywords": [],
   "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "megadetector_gui"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
-  },
   "dependencies": {
     "concurrently": "^5.3.0",
-    "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
     "fomantic-ui": "^2.8.7",
     "jquery": "^3.5.1",
@@ -91,20 +59,17 @@
     "sirv-cli": "^1.0.10"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
-    "@electron-forge/maker-deb": "^6.0.0-beta.54",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "electron": "11.0.3",
     "electron-builder": "^22.9.1",
     "rollup": "^2.35.1",
+    "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.0.0"
+    "svelte": "^3.0.0",
+    "wait-on": "^5.2.1"
   }
 }
