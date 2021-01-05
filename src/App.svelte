@@ -9,7 +9,7 @@
   import Review from "./routes/Review.svelte";
   import Documentation from "./routes/Documentation.svelte";
 
-  let page;
+  let page = Home;
   let params;
 
   router("/", () => (page = Home));

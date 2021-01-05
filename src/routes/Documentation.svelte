@@ -286,7 +286,7 @@
                 data-position="bottom left">
                 <img
                   class="ui large image"
-                  src={isDev ? path.join(process.cwd(), 'src', 'assets', 'demo.JPG') : path.join(process.cwd(), 'resources', 'assets', 'demo.JPG')}
+                  src={isDev ? 'assets/demo.JPG' : path.join(process.cwd(), 'resources', 'assets', 'demo.JPG')}
                   alt="demo" />
               </div>
             </div>

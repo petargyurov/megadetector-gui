@@ -3,13 +3,6 @@ const path = require('path')
 
 const isDev = process.env.APP_DEV ? process.env.APP_DEV.trim() == 'true' : false
 
-if (isDev) {
-  require('electron-reload')(__dirname, {
-    electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
-    awaitWriteFinish: true,
-  })
-}
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
@@ -28,14 +21,14 @@ const createWindow = () => {
     },
   })
 
-  mainWindow.loadURL("http://localhost:5000")
-  mainWindow.webContents.openDevTools()
-
-  // if (isDev) {
-  //   // Open the DevTools and serve svelte localhost
-  //   mainWindow.loadURL("http://localhost:5000")
-  //   mainWindow.webContents.openDevTools()
-  // }
+  if (isDev) {
+    // Serve svelte localhost and open the DevTools
+    mainWindow.loadURL("http://localhost:5000")
+    mainWindow.webContents.openDevTools()
+  } else {
+    // Serve the local build
+    mainWindow.loadFile(path.join(__dirname, '../public/index.html'))
+  }
 }
 
 // This method will be called when Electron has finished

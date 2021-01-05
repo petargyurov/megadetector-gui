@@ -12,7 +12,7 @@
     "sv-dev": "rollup -c -w",
     "sv-build": "rollup -c",
     "sv-start": "sirv public --single",
-    "dev": "set APP_DEV=true && concurrently \"npm:sv-dev\"  \"npm:electron\"",
+    "dev": "export APP_DEV=true && concurrently \"npm:sv-dev\"  \"npm:electron\"",
     "semantic-build": "npx gulp --gulpfile ./semantic/gulpfile.js build"
   },
   "build": {
