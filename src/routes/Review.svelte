@@ -1,8 +1,9 @@
 <script>
-  import { onMount, beforeUpdate, afterUpdate } from "svelte";
+  import { onMount, onDestroy, afterUpdate } from "svelte";
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
   import { backend } from "../bindings.js";
+  import { back } from "page";
 
   const fs = require("fs");
   const path = require("path");
@@ -31,6 +32,18 @@
     zoomPosition: "right",
     zoomStyle: "z-index: 1000; position: absolute; border-radius: 3px",
   };
+
+  onDestroy(() => {
+    if (backend.childProcess || numReviewedImgs > 0) {
+      backend.stopProcess();
+      window.$("body").toast({
+        class: "error",
+        showIcon: "exclamation circle",
+        displayTime: 5000,
+        message: "Review interrupted!",
+      });
+    }
+  });
 
   const deleteZoom = () => {
     // this is pretty hacky but I can't find a proper way to use the kill method for ImageZoom

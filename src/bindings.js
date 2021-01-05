@@ -11,7 +11,11 @@ class BackendInterface {
   }
 
   stopProcess = () => {
-    kill(this.childProcess.pid)
+    // this seems to work better than process.kill(this.childProcess.pid) or this.childProcess.kill()
+    if (this.childProcess && this.childProcess.pid) {
+      kill(this.childProcess.pid)
+      this.childProcess = undefined
+    }
   }
 
   // there is a bug with commonJS (?) that fails to recognize the # character used for private methods

@@ -1,9 +1,9 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import Page from "../components/Page.svelte";
   import Card from "../components/Card.svelte";
   import { backend } from "../bindings.js";
-  import router from "page";
+  import router, { back } from "page";
   const path = require("path");
   const { dialog } = require("electron").remote;
 
@@ -19,6 +19,18 @@
       folderSelected = true;
     });
   };
+
+  onDestroy(() => {
+    if (backend.childProcess) {
+      backend.stopProcess();
+      window.$("body").toast({
+        class: "error",
+        showIcon: "exclamation circle",
+        displayTime: 5000,
+        message: "Detection interrupted!",
+      });
+    }
+  });
 
   onMount(async () => {
     window.$(".ui.dropdown").dropdown();
