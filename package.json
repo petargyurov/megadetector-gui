@@ -4,7 +4,7 @@
     "email": "pgyurov93@gmail.com"
   },
   "name": "megadetector-gui",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha",
   "description": "Machine learning powered tool for sorting camera trap images",
   "main": "src/index.js",
   "scripts": {
