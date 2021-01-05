@@ -16,7 +16,7 @@
   const selectFolder = () => {
     dialog.showOpenDialog({ properties: ["openDirectory"] }).then((result) => {
       selectedFolder = result.filePaths[0];
-      folderSelected = true;
+      folderSelected = selectedFolder ? true : false;
     });
   };
 
@@ -119,7 +119,7 @@
                 on:click={selectFolder}>Import Data</button>
               <span
                 id="selectedDirectory"
-                class="ui small grey text">{selectedFolder}</span>
+                class="ui small grey text">{selectedFolder ? selectedFolder : ''}</span>
             </div>
           </div>
           <div class="row">
