@@ -3,7 +3,7 @@
   import Page from "../components/Page.svelte";
   import Card from "../components/Card.svelte";
   import { backend } from "../bindings.js";
-  import router, { back } from "page";
+  import router from "page";
   const path = require("path");
   const { dialog } = require("electron").remote;
 
