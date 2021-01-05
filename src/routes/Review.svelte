@@ -83,11 +83,16 @@
     nextImage();
   };
 
-  const selectFolder = () => {
-    dialog.showOpenDialog({ properties: ["openFile"] }).then((result) => {
-      resultsPath = result.filePaths[0];
-      readResults();
-    });
+  const selectFile = () => {
+    dialog
+      .showOpenDialog({
+        properties: ["openFile"],
+        filters: [{ name: "JSON", extensions: ["json"] }],
+      })
+      .then((result) => {
+        resultsPath = result.filePaths[0];
+        readResults();
+      });
   };
 
   const readResults = () => {
@@ -198,7 +203,7 @@
           <i class="edit icon" />
           Review model predictions
         </div>
-        <div class="ui primary button" on:click={selectFolder}>
+        <div class="ui primary button" on:click={selectFile}>
           Select Results File
         </div>
       </div>
