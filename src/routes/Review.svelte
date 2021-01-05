@@ -3,7 +3,6 @@
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
   import { backend } from "../bindings.js";
-  import { back } from "page";
 
   const fs = require("fs");
   const path = require("path");
