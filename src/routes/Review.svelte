@@ -232,6 +232,7 @@
                   <h2 class="ui header">
                     <button
                       class="ui compact icon primary button"
+                      class:disabled={numReviewedImgs <= 0}
                       on:click={() => {
                         window.$('#saveModal').modal('show');
                       }}>
@@ -357,7 +358,7 @@
     <div class="content">
       <div class="description">
         This action will move
-        {currentImgIndex}
+        {numReviewedImgs}
         images to their associated folders
       </div>
     </div>
