@@ -49,8 +49,13 @@
     });
     window.$("#detectProgressBar").progress({
       onSuccess: () => {
-        window.$("#finishedModal").modal("show");
-        window.$("#stopButton").addClass("disabled");
+        // Give the backend process a bit of time to finish closing.
+        // This is to prevent the interruption toast from popping up when users click the Human Review button
+        // TODO: better way to handle this?
+        setTimeout(() => {
+          window.$("#finishedModal").modal("show");
+          window.$("#stopButton").addClass("disabled");
+        }, 500);
       },
     });
     window.$(".ui.checkbox").checkbox({

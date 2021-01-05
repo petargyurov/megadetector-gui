@@ -28,6 +28,11 @@ class BackendInterface {
         stdio: ['inherit'],
       },
     )
+
+    this.childProcess.on('exit', (code) => {
+      // TODO: should specify some error handling behaviour here
+      this.childProcess = undefined
+    })
   }
 
   move(updatedResultsPath) {
