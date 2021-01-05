@@ -2,7 +2,8 @@
 
 A desktop application that simplifies the use of the animal detection model known as [MegaDetector.](https://github.com/microsoft/CameraTraps/blob/master/megadetector.md)
 
-![image](https://i.imgur.com/pbBOukO.png)
+<img src="https://i.imgur.com/TyhRLdQ.png" width="600" >
+<img src="https://i.imgur.com/T5DpDag.png" width="600" >
 
 ## Introduction
 
@@ -12,11 +13,36 @@ The aim of this project is to provide a simple, easy to use, application that en
 
 Using machine learning we can reduce the time it takes to sort these images by making use of _object detection_. **This application categorises your images in folders** depending on what it thinks it has detected.
 
+## Features
+
+### Current Features
+
+- automatic detection of animals in a set of photos
+- review process that allows you to correct the results of the automatic detection
+- zoom-and-pan feature on photos during review to help spot animals
+- automatically move the images in labelled folders
+- detailed documentation on how to use the application
+
+### Future Features
+
+- ability to import other models
+- ability to train custom models
+- in-app labelling
+- upload photos to a database of your choice
+
 ## Installation
 
-A Windows installer will be provided soon!
+Go to the [Releases page](https://github.com/petargyurov/megadetector-gui/releases) and download the provided installer.
 
-A MacOS version is being considered.
+### Supported Platforms
+
+Whilst this is an Electron application which will work on most operating systems, the backend executable that it needs to be bundled with is currently only built for Windows. This will be addressed in the future: all that is required is someone with the desired OS to build the backend executable; volunteers are welcome!
+
+Windows :heavy_check_mark:
+
+MacOS :x:
+
+Linux: :x:
 
 ## Development
 
@@ -28,7 +54,7 @@ The application itself is built using ElectronJS. It provides flexibility and it
 
 ElectronJS lets you execute native code outside the normal browser window which makes it easy for us to invoke the backend executable. The backend is built to function like a CLI program which makes it easy for us to pass commands and parameters to it. For more information check out the [backend repository](https://github.com/petargyurov/megadetector-api).
 
-### Dev Installation & Running (Windows only)
+### Dev Installation & Running (Windows)
 
 If you wish to use this project for development purposes follow these steps:
 
@@ -48,9 +74,3 @@ Steps:
 Running the application:
 
 1. To run the app in dev mode: `npm run start`
-
----
-
-:warning: There is a bug with hot-reloading the app. You need to re-run the app each time you make changes. Will hopefully fix soon.
-
----
