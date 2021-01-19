@@ -2,7 +2,7 @@
 name: Question
 about: Ask a question about the application
 title: ''
-labels: enhancement
+labels: question
 assignees: petargyurov
 
 ---
