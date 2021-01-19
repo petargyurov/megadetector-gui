@@ -2,8 +2,8 @@
 name: Question
 about: Ask a question about the application
 title: ''
-labels: ''
-assignees: ''
+labels: enhancement
+assignees: petargyurov
 
 ---
 
