@@ -1,8 +1,8 @@
-<script>
+<script crossorigin>
   import router from "page";
 
   import Sidebar from "./components/Sidebar.svelte";
-  import { displayErrorToast } from "./errors";
+  import { registerErrorHandlers } from "./errors";
 
   // Routes
   import Home from "./routes/Home.svelte";
@@ -12,6 +12,8 @@
 
   let page;
   let params;
+
+  registerErrorHandlers();
 
   router("/", () => (page = Home));
   router("/detect", () => (page = Detect));
@@ -28,14 +30,6 @@
   router("*", () => null); // TODO: why does this work?
   router.start();
   router.show("/");
-
-  window.onerror = function (msg, url, line, col, error) {
-    displayErrorToast("error", error.stack);
-  };
-
-  window.onunhandledrejection = (e) => {
-    displayErrorToast("rejection", e.reason.stack);
-  };
 </script>
 
 <main>

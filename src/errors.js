@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 export const displayErrorToast = (type, error) => {
   window.$('body').toast({
     class: 'red',
@@ -25,4 +27,39 @@ export const displayErrorToast = (type, error) => {
       },
     ],
   })
+}
+
+export const logToFile = (data, level) => {
+  if (data) {
+    data = data.toString()
+  }
+
+  if (level) {
+    const now = new Date().toISOString().replace('T', ' ').replace('Z', '')
+    data = `${now}: ${level.toUpperCase()} - ${data}\n`
+  }
+
+  fs.appendFileSync('debug.log', data)
+}
+
+export const registerErrorHandlers = () => {
+  window.onerror = function (msg, url, line, col, error) {
+    if (error) {
+      error = error.stack.toString()
+    }
+
+    if (msg === 'Script error.') {
+      error = "An unknown error occured inside a 'remote' script."
+    }
+
+    displayErrorToast('error', error)
+    logToFile(error, 'ERROR')
+    return false
+  }
+
+  window.onunhandledrejection = (error) => {
+    displayErrorToast('rejection', error.reason.stack)
+    logToFile(error.reason.stack.toString(), 'ERROR')
+    return false
+  }
 }

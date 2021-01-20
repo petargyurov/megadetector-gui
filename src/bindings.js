@@ -1,6 +1,6 @@
 const path = require('path')
 const kill = require('tree-kill')
-import { displayErrorToast } from './errors'
+import { displayErrorToast, logToFile } from './errors'
 
 class BackendInterface {
   // ideally these would be made private with the # character but support for this feature is limited in various dependencies
@@ -29,9 +29,19 @@ class BackendInterface {
         stdio: ['inherit'],
       },
       function (err, data) {
-        displayErrorToast('error', err.toString())
+        if (err) {
+          displayErrorToast('backendError', err.toString())
+        }
+        if (data) {
+          logToFile(data)
+        }
       },
     )
+
+    // TF logs to stderr so we need to listen in and log this
+    this.childProcess.stderr.on('data', (data) => {
+      logToFile(data)
+    })
   }
 
   move(updatedResultsPath) {
@@ -62,6 +72,7 @@ class BackendInterface {
       conf,
       '--electron',
       autosort ? '--auto-sort' : '--no-auto-sort',
+      '--verbose',
     ]
 
     this._runExec(parameters)
