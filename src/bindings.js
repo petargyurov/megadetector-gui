@@ -1,5 +1,6 @@
 const path = require('path')
 const kill = require('tree-kill')
+import { displayErrorToast } from './errors'
 
 class BackendInterface {
   // ideally these would be made private with the # character but support for this feature is limited in various dependencies
@@ -27,12 +28,10 @@ class BackendInterface {
       {
         stdio: ['inherit'],
       },
+      function (err, data) {
+        displayErrorToast('error', err.toString())
+      },
     )
-
-    this.childProcess.on('exit', (code) => {
-      // TODO: should specify some error handling behaviour here
-      this.childProcess = undefined
-    })
   }
 
   move(updatedResultsPath) {
@@ -86,10 +85,6 @@ class BackendInterface {
         $('#pos').text(pos)
         $('#eta').text(eta === undefined ? '--:--:--' : eta)
       }
-    })
-
-    this.childProcess.stderr.on('data', (data) => {
-      console.log('stderr', data)
     })
   }
 }
