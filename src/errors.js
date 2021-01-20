@@ -1,9 +1,12 @@
 const fs = require('fs')
+const path = require('path')
+const shell = require('electron').shell
 
 export const displayErrorToast = (type, error) => {
   window.$('body').toast({
     class: 'red',
     showIcon: 'bug',
+    closeIcon: true,
     displayTime: 0,
     message: 'An unexpected error occured!',
     className: {
@@ -11,7 +14,10 @@ export const displayErrorToast = (type, error) => {
     },
     actions: [
       {
-        text: 'Dismiss',
+        text: 'Open Log File',
+        click: function () {
+          shell.openPath(path.join('debug.log'))
+        },
       },
       {
         text: 'Copy Error',
