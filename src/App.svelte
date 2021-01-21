@@ -9,6 +9,7 @@
   import Detect from "./routes/Detect.svelte";
   import Review from "./routes/Review.svelte";
   import Documentation from "./routes/Documentation.svelte";
+  import Settings from "./routes/Settings.svelte";
 
   let page;
   let params;
@@ -27,6 +28,7 @@
     () => (page = Review)
   );
   router("/documentation", () => (page = Documentation));
+  router("/settings", () => (page = Settings));
   router("*", () => null); // TODO: why does this work?
   router.start();
   router.show("/");
