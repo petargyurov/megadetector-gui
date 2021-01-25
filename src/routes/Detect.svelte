@@ -6,6 +6,7 @@
   import router from "page";
   const path = require("path");
   const { dialog } = require("electron").remote;
+  import { settings } from "../userSettings.js";
 
   let modelSelected = false;
   let folderSelected = false;
@@ -43,7 +44,7 @@
     window.$(".ui.slider").slider({
       min: 0,
       max: 100,
-      start: 50,
+      start: settings.get("defaultConfidenceThreshold"),
       step: 5,
       smooth: false,
     });
@@ -76,9 +77,6 @@
     window.$(".ui.slider").slider("set value", 50);
   };
 </script>
-
-<style>
-</style>
 
 <Page title="Detect">
   <div class="column" style="width: 60%;">
@@ -114,12 +112,12 @@
               </div>
             </div>
             <div class="column">
-              <button
-                class="fluid ui primary button"
-                on:click={selectFolder}>Import Data</button>
-              <span
-                id="selectedDirectory"
-                class="ui small grey text">{selectedFolder ? selectedFolder : ''}</span>
+              <button class="fluid ui primary button" on:click={selectFolder}
+                >Import Data</button
+              >
+              <span id="selectedDirectory" class="ui small grey text"
+                >{selectedFolder ? selectedFolder : ""}</span
+              >
             </div>
           </div>
           <div class="row">
@@ -128,21 +126,25 @@
                 Confidence Threshold
               </h4>
               <div class="meta">
-                <span>Results below this level will be classified as empty</span>
+                <span>Results below this level will be classified as empty</span
+                >
               </div>
             </div>
             <div class="column">
               <div
                 class="ui small primary labeled ticked slider"
-                id="slider-1" />
+                id="slider-1"
+              />
             </div>
           </div>
           <div class="row">
             <div class="column">
               <h4 class="ui header" style="margin-bottom: 0;">Auto-sort</h4>
               <div class="meta">
-                <span>Skip human review and automatically put original images in
-                  categorised folders</span>
+                <span
+                  >Skip human review and automatically put original images in
+                  categorised folders</span
+                >
               </div>
             </div>
             <div class="column">
@@ -177,11 +179,10 @@
                 class="ui right labeled fluid icon green button"
                 on:click={() => {
                   processing = true;
-                  let inputPath = window.$('#selectedDirectory').text();
-                  let outputPath = path.join(inputPath, 'output');
-                  let conf = Number(window
-                        .$('.ui.slider')
-                        .slider('get value')) / 100.0;
+                  let inputPath = window.$("#selectedDirectory").text();
+                  let outputPath = path.join(inputPath, "output");
+                  let conf =
+                    Number(window.$(".ui.slider").slider("get value")) / 100.0;
                   backend.detect(inputPath, outputPath, conf, autosort);
                 }}>
                 <i class="play icon" />
@@ -192,7 +193,7 @@
                 id="stopButton"
                 class="ui right labeled fluid icon red button loading disabled"
                 on:click={() => {
-                  window.$('#stopModal').modal('show');
+                  window.$("#stopModal").modal("show");
                 }}>
                 <i class="stop icon" />
                 Stop
@@ -205,7 +206,8 @@
             <div
               class="ui green indicating progress"
               id="detectProgressBar"
-              style="margin-bottom: 0;">
+              style="margin-bottom: 0;"
+            >
               <div class="bar" style="height: 2.5em">
                 <div class="progress" />
               </div>
@@ -226,19 +228,17 @@
       <div
         class="ui button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
-        }}>
-        Back
-      </div>
+          window.$(".ui.modal").modal("hide");
+        }}
+      >Back</div>
       <div
         class="ui red button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
+          window.$(".ui.modal").modal("hide");
           backend.stopProcess();
           resetUI();
-        }}>
-        Stop
-      </div>
+        }}
+      >Stop</div>
     </div>
   </div>
   <div class="ui tiny modal" id="finishedModal">
@@ -251,8 +251,9 @@
             All images have been processed.
             {#if autosort}
               <div>
-                <span class="ui red text">(Some images may still be undergoing
-                  auto-sorting)</span>
+                <span class="ui red text"
+                  >(Some images may still be undergoing auto-sorting)</span
+                >
               </div>
             {/if}
           </div>
@@ -263,22 +264,27 @@
       <div
         class="ui button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
+          window.$(".ui.modal").modal("hide");
           resetUI();
-        }}>
-        Close
-      </div>
+        }}
+      >Close</div>
       {#if !autosort}
         <div
           class="ui green button"
           on:click={() => {
-            window.$('.ui.modal').modal('hide');
-            const resultsPath = path.join(selectedFolder, 'output', 'results.json');
+            window.$(".ui.modal").modal("hide");
+            const resultsPath = path.join(
+              selectedFolder,
+              "output",
+              "results.json"
+            );
             router.redirect(`/review/${resultsPath}`);
-          }}>
-          Human Review
-        </div>
+          }}
+        >Human Review</div>
       {/if}
     </div>
   </div>
 </Page>
+
+<style>
+</style>
