@@ -48,7 +48,7 @@
             </h4>
             <div class="meta">
               <span
-                >"Whether to render the animation when cycling through images</span
+                >Whether to render the animation when cycling through images</span
               >
             </div>
           </div>
