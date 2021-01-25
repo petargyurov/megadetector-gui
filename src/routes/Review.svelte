@@ -217,7 +217,9 @@
         <div>
           <div class="left aligned floating ui label">
             <i class="images outline icon" />
-            {path.basename(currentImg.file)}
+            {settings.get("showFullImagePath")
+              ? currentImg.file
+              : path.basename(currentImg.file)}
             <div class="detail">
               {`${
                 currentImgIndex + 1 <= updatedResults.images.length
