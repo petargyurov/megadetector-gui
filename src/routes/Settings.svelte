@@ -2,57 +2,38 @@
   import Page from "../components/Page.svelte";
   import { onMount } from "svelte";
   import Card from "../components/Card.svelte";
-  const Store = require("electron-store");
+  import { settings } from "../userSettings.js";
 
-  const schema = {
-    showImageTransition: {
-      type: "boolean",
-      default: false,
-    },
-    showFullImagePath: {
-      type: "boolean",
-      default: false,
-    },
-    defaultConfidenceThreshold: {
-      type: "number",
-      minimum: 0,
-      maximum: 100,
-      default: 50,
-    },
-  };
-
-  const store = new Store({ schema });
-
-  let settings = {};
+  let settingsCopy = {};
 
   onMount(async () => {
-    settings = store.store;
+    settingsCopy = settings.store;
 
     // initialise inputs
     window.$("#showImageTransition").checkbox({
       onChange: () => {
-        settings.showImageTransition = !settings.showImageTransition;
+        settingsCopy.showImageTransition = !settingsCopy.showImageTransition;
       },
     });
     window.$("#showFullImagePath").checkbox({
       onChange: () => {
-        settings.showFullImagePath = !settings.showFullImagePath;
+        settingsCopy.showFullImagePath = !settingsCopy.showFullImagePath;
       },
     });
     window.$(".ui.slider").slider({
       min: 0,
       max: 100,
-      start: store.get("defaultConfidenceThreshold"),
+      start: settings.get("defaultConfidenceThreshold"),
       step: 5,
       smooth: false,
       onChange: (v) => {
-        settings.defaultConfidenceThreshold = v;
+        settingsCopy.defaultConfidenceThreshold = v;
       },
     });
   });
 
   const saveSettings = () => {
-    store.store = settings;
+    settings.store = settingsCopy;
   };
 </script>
 
@@ -75,12 +56,12 @@
             <div
               id="showImageTransition"
               class="ui toggle checkbox"
-              class:checked={settings.showImageTransition ? true : null}
+              class:checked={settingsCopy.showImageTransition ? true : null}
             >
               <input
                 type="checkbox"
                 name="showImageTransition"
-                checked={settings.showImageTransition ? true : null}
+                checked={settingsCopy.showImageTransition ? true : null}
               />
               <label for="showImageTransition" />
             </div>
@@ -100,12 +81,12 @@
             <div
               id="showFullImagePath"
               class="ui toggle checkbox"
-              class:checked={settings.showFullImagePath ? true : null}
+              class:checked={settingsCopy.showFullImagePath ? true : null}
             >
               <input
                 type="checkbox"
                 name="showFullImagePath"
-                checked={settings.showFullImagePath ? true : null}
+                checked={settingsCopy.showFullImagePath ? true : null}
               />
               <label for="showFullImagePath" />
             </div>
