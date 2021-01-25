@@ -2,64 +2,57 @@
   import Page from "../components/Page.svelte";
   import { onMount } from "svelte";
   import Card from "../components/Card.svelte";
-  import { displayErrorToast, logToFile } from "../errors";
+  const Store = require("electron-store");
 
-  const fs = require("fs");
-  const path = require("path");
+  const schema = {
+    showImageTransition: {
+      type: "boolean",
+      default: false,
+    },
+    showFullImagePath: {
+      type: "boolean",
+      default: false,
+    },
+    defaultConfidenceThreshold: {
+      type: "number",
+      minimum: 0,
+      maximum: 100,
+      default: 50,
+    },
+  };
 
-  let settings = [];
-  let updatedSettings;
+  const store = new Store({ schema });
+
+  let settings = {};
 
   onMount(async () => {
-    window.$(".ui.checkbox").checkbox();
+    settings = store.store;
 
-    fs.readFile("settings.json", "utf8", (err, data) => {
-      if (err) {
-        displayErrorToast("error", err);
-        logToFile(err, "ERROR");
-      } else {
-        settings = JSON.parse(data);
-        updatedSettings = JSON.parse(data);
-      }
+    // initialise inputs
+    window.$("#showImageTransition").checkbox({
+      onChange: () => {
+        settings.showImageTransition = !settings.showImageTransition;
+      },
+    });
+    window.$("#showFullImagePath").checkbox({
+      onChange: () => {
+        settings.showFullImagePath = !settings.showFullImagePath;
+      },
+    });
+    window.$(".ui.slider").slider({
+      min: 0,
+      max: 100,
+      start: store.get("defaultConfidenceThreshold"),
+      step: 5,
+      smooth: false,
+      onChange: (v) => {
+        settings.defaultConfidenceThreshold = v;
+      },
     });
   });
 
   const saveSettings = () => {
-    let valid = true;
-    for (const [name, setting] of Object.entries(settings)) {
-      let newValue = setting.value;
-      if (setting.UI === "checkbox") {
-        newValue = window.$(`#${name}`).checkbox("is checked");
-      } else if (setting.UI === "input") {
-        newValue = window.$(`#${name}`).val();
-        if (setting.type === "float") {
-          newValue = parseFloat(newValue);
-        } else if (setting.type === "integer") {
-          newValue = parseInt(newValue, 10);
-        }
-        if (setting.type !== "string") {
-          if (
-            isNaN(newValue) ||
-            newValue < setting.validation.min ||
-            newValue > setting.validation.max
-          ) {
-            window.$(`#${name}ParentDiv`).addClass("error");
-            valid = false;
-            break;
-          } else {
-            window.$(`#${name}ParentDiv`).removeClass("error");
-          }
-        }
-      }
-      updatedSettings[name].value = newValue;
-    }
-    if (valid) {
-      fs.writeFileSync(
-        "settings.json",
-        JSON.stringify(updatedSettings, null, 4)
-      );
-    }
-    console.log(updatedSettings);
+    store.store = settings;
   };
 </script>
 
@@ -67,41 +60,74 @@
   <div class="column" style="width: 80%;">
     <Card>
       <div class="ui grid">
-        {#each Object.entries(settings) as [s, setting]}
-          <div class="four column row">
-            <div class="eight wide left floated column">
-              <h4 class="ui header" style="margin-bottom: 0;">
-                {setting.displayName}
-              </h4>
-              <div class="meta">
-                <span>{setting.description}</span>
-              </div>
-            </div>
-            <div class="eight wide right floated right aligned column">
-              {#if setting.UI === "checkbox"}
-                <div
-                  id={s}
-                  class="ui toggle checkbox"
-                  class:checked={setting.value ? true : null}
-                >
-                  <input
-                    type="checkbox"
-                    name={s}
-                    checked={setting.value ? true : null}
-                  />
-                  <label for={s} />
-                </div>
-              {:else if setting.UI === "input"}
-                <div id={`${s}ParentDiv`} class="ui right labeled input">
-                  <input id={s} type="text" value={setting.value} />
-                  <div class="ui basic label">%</div>
-                </div>
-              {/if}
+        <div class="four column row">
+          <div class="eight wide left floated column">
+            <h4 class="ui header" style="margin-bottom: 0;">
+              Show Image Transition
+            </h4>
+            <div class="meta">
+              <span
+                >"Whether to render the animation when cycling through images</span
+              >
             </div>
           </div>
-        {:else}
-          <p>loading...</p>
-        {/each}
+          <div class="eight wide right floated right aligned column">
+            <div
+              id="showImageTransition"
+              class="ui toggle checkbox"
+              class:checked={settings.showImageTransition ? true : null}
+            >
+              <input
+                type="checkbox"
+                name="showImageTransition"
+                checked={settings.showImageTransition ? true : null}
+              />
+              <label for="showImageTransition" />
+            </div>
+          </div>
+        </div>
+
+        <div class="four column row">
+          <div class="eight wide left floated column">
+            <h4 class="ui header" style="margin-bottom: 0;">
+              Show Full Image Path
+            </h4>
+            <div class="meta">
+              <span>Whether to show full image path in the Review panel</span>
+            </div>
+          </div>
+          <div class="eight wide right floated right aligned column">
+            <div
+              id="showFullImagePath"
+              class="ui toggle checkbox"
+              class:checked={settings.showFullImagePath ? true : null}
+            >
+              <input
+                type="checkbox"
+                name="showFullImagePath"
+                checked={settings.showFullImagePath ? true : null}
+              />
+              <label for="showFullImagePath" />
+            </div>
+          </div>
+        </div>
+
+        <div class="four column row">
+          <div class="eight wide left floated column">
+            <h4 class="ui header" style="margin-bottom: 0;">
+              Default Confidence Threshold
+            </h4>
+            <div class="meta">
+              <span>The default level to which to set the slider to</span>
+            </div>
+          </div>
+          <div class="eight wide right floated right aligned column">
+            <div
+              class="ui small primary labeled ticked slider"
+              id="defaultConfidenceThreshold"
+            />
+          </div>
+        </div>
       </div>
     </Card>
     <button class="ui positive right floated button" on:click={saveSettings}

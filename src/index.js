@@ -1,6 +1,6 @@
 const { app, BrowserWindow, Menu } = require('electron')
 const path = require('path')
-
+const Store = require('electron-store')
 const isDev = process.env.APP_DEV ? process.env.APP_DEV.trim() == 'true' : false
 
 if (isDev) {
@@ -65,4 +65,6 @@ app.on('activate', () => {
 })
 
 // In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+
+// Initialise user settings store for use in the renderer process
+Store.initRenderer()
