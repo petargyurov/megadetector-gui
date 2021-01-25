@@ -3,7 +3,7 @@ const Store = require('electron-store')
 const schema = {
   showImageTransition: {
     type: 'boolean',
-    default: false,
+    default: true,
   },
   showFullImagePath: {
     type: 'boolean',
