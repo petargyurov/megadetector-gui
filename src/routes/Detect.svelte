@@ -13,6 +13,7 @@
   let selectedFolder = "";
   let processing = false;
   let autosort = false;
+  let countdownID;
 
   const selectFolder = () => {
     dialog.showOpenDialog({ properties: ["openDirectory"] }).then((result) => {
@@ -31,6 +32,7 @@
         message: "Detection interrupted!",
       });
     }
+    window.clearInterval(countdownID);
   });
 
   onMount(async () => {
@@ -64,6 +66,38 @@
         autosort = !autosort;
       },
     });
+
+    let end = new Date();
+    countdownID = setInterval(function () {
+      let now = new Date();
+
+      let eta = window.$("#eta").text().split(":");
+
+      let hours = parseInt(eta[0], 10) || 0;
+      let mins = parseInt(eta[1], 10) || 0;
+      let secs = parseInt(eta[2], 10) || 0;
+
+      end.setHours(now.getHours() + hours);
+      end.setMinutes(now.getMinutes() + mins);
+      end.setSeconds(now.getSeconds() + secs);
+
+      let T = end - new Date();
+      if (T > 0) {
+        let H = Math.floor((T % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+          .toString()
+          .padStart(2, "0");
+        let M = Math.floor((T % (1000 * 60 * 60)) / (1000 * 60))
+          .toString()
+          .padStart(2, "0");
+        let S = Math.floor((T % (1000 * 60)) / 1000)
+          .toString()
+          .padStart(2, "0");
+
+        window.$("#eta").text(`${H}:${M}:${S}`);
+      } else {
+        window.$("#eta").text("--:--:--");
+      }
+    }, 1000);
   });
 
   const resetUI = () => {
