@@ -7,18 +7,19 @@
     : false;
 </script>
 
-<style>
-</style>
-
 <div
   class="ui sidebar vertical menu left uncover visible"
-  style="background-color: #f8f9fa; border: 0; box-shadow: 1;">
+  style="background-color: #f8f9fa; border: 0; box-shadow: 1;"
+>
   <div style="padding: 1em; margin-bottom: 1em;">
     <h3>
       <img
         class="ui avatar image"
-        src={isDev ? path.join(process.cwd(), 'src', 'assets', 'icon.ico') : path.join(process.cwd(), 'resources', 'assets', 'icon.ico')}
-        alt="logo" />
+        src={isDev
+          ? path.join(process.cwd(), "src", "assets", "icon.ico")
+          : path.join(process.cwd(), "resources", "assets", "icon.ico")}
+        alt="logo"
+      />
       MegaDetector
       <span class="ui tiny grey text">v{version}</span>
     </h3>
@@ -32,5 +33,11 @@
   </a>
   <a class="item" href="/documentation">
     <h4><i class="book icon" /> Documentation</h4>
+  </a>
+  <a
+    class="item"
+    href="/settings"
+    style="position: absolute; bottom: 0; width: 100%;">
+    <h4><i class="cog icon" /> Settings</h4>
   </a>
 </div>

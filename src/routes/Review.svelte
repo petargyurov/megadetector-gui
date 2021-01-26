@@ -3,6 +3,7 @@
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
   import { backend } from "../bindings.js";
+  import { settings } from "../userSettings.js";
 
   const fs = require("fs");
   const path = require("path");
@@ -154,8 +155,10 @@
     } else {
       currentImg = updatedResults.images[currentImgIndex + 1];
       currentImgIndex += 1;
-      window.$(".ui.big.image, .horizontal.label").transition("stop");
-      window.$(".ui.big.image, .horizontal.label").transition("pulse");
+      if (settings.get("showImageTransition")) {
+        window.$(".ui.big.image, .horizontal.label").transition("stop");
+        window.$(".ui.big.image, .horizontal.label").transition("pulse");
+      }
     }
 
     if (numReviewedImgs <= updatedResults.images.length - 1) {
@@ -178,8 +181,10 @@
       currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
       updateMarkAs();
-      window.$(".ui.big.image, .horizontal.label").transition("stop");
-      window.$(".ui.big.image, .horizontal.label").transition("pulse");
+      if (settings.get("showImageTransition")) {
+        window.$(".ui.big.image, .horizontal.label").transition("stop");
+        window.$(".ui.big.image, .horizontal.label").transition("pulse");
+      }
     }
   };
 
@@ -191,9 +196,6 @@
     backend.move(savePath);
   };
 </script>
-
-<style>
-</style>
 
 <Page title="Review">
   <div class="column">
@@ -210,20 +212,28 @@
     {:else}
       <div
         class="ui fluid horizontal card"
-        style="width: 100%; margin-bottom: 0;">
+        style="width: 100%; margin-bottom: 0;"
+      >
         <div>
           <div class="left aligned floating ui label">
             <i class="images outline icon" />
-            {path.basename(currentImg.file)}
+            {settings.get("showFullImagePath")
+              ? currentImg.file
+              : path.basename(currentImg.file)}
             <div class="detail">
-              {`${currentImgIndex + 1 <= updatedResults.images.length ? currentImgIndex + 1 : currentImgIndex} / ${updatedResults.images.length}`}
+              {`${
+                currentImgIndex + 1 <= updatedResults.images.length
+                  ? currentImgIndex + 1
+                  : currentImgIndex
+              } / ${updatedResults.images.length}`}
             </div>
           </div>
           <div id="imageContainer">
             <img
               class="ui big image"
               src={currentImg.preview}
-              alt={currentImg.preview} />
+              alt={currentImg.preview}
+            />
           </div>
         </div>
         <div class="content">
@@ -239,7 +249,7 @@
                       class="ui compact icon primary button"
                       class:disabled={numReviewedImgs <= 0}
                       on:click={() => {
-                        window.$('#saveModal').modal('show');
+                        window.$("#saveModal").modal("show");
                       }}>
                       <i class="save icon" />
                       Save Progress
@@ -260,8 +270,9 @@
                   <div class="column">
                     <div
                       class="ui large horizontal label"
-                      class:green={categories[detection.category] === 'animal'}
-                      class:grey={categories[detection.category] !== 'animal'}>
+                      class:green={categories[detection.category] === "animal"}
+                      class:grey={categories[detection.category] !== "animal"}
+                    >
                       {categories[detection.category]}
                     </div>
                     {#if currentImg.edited}
@@ -272,9 +283,13 @@
                     <div
                       class="ui large horizontal label"
                       class:orange={detection.conf <= confThresh + colourSplit}
-                      class:olive={confThresh + colourSplit < detection.conf && detection.conf < 1 - colourSplit}
-                      class:green={detection.conf >= 1 - colourSplit}>
-                      {(Number(detection.conf) * 100).toPrecision(inputParams.conf_digits)}%
+                      class:olive={confThresh + colourSplit < detection.conf &&
+                        detection.conf < 1 - colourSplit}
+                      class:green={detection.conf >= 1 - colourSplit}
+                    >
+                      {(Number(detection.conf) * 100).toPrecision(
+                        inputParams.conf_digits
+                      )}%
                     </div>
                   </div>
                 </div>
@@ -306,15 +321,15 @@
             <button
               class="ui gray button"
               on:click={() => {
-                window.$('#markModal').modal('show');
+                window.$("#markModal").modal("show");
               }}>
               {#if currentImg && currentImg.edited}
                 Undo
               {:else}Mark as {markAs}{/if}
             </button>
-            <button
-              class="ui positive button"
-              on:click={nextImage}>Correct</button>
+            <button class="ui positive button" on:click={nextImage}
+              >Correct</button
+            >
           </div>
         </div>
       </div>
@@ -332,30 +347,28 @@
     <div class="content">
       <div class="description">
         {#if currentImg && currentImg.edited}
-          {#if markAs === 'animal'}
+          {#if markAs === "animal"}
             Bounding box and confidence data will be restored
-          {:else if markAs === 'empty'}Image will be labelled as empty{/if}
-        {:else if markAs === 'animal'}
+          {:else if markAs === "empty"}Image will be labelled as empty{/if}
+        {:else if markAs === "animal"}
           Confidence will be set to 100%. No bounding box data will exist.
-        {:else if markAs === 'empty'}Image will be labelled as empty{/if}
+        {:else if markAs === "empty"}Image will be labelled as empty{/if}
       </div>
     </div>
     <div class="actions">
       <div
         class="ui button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
-        }}>
-        Cancel
-      </div>
+          window.$(".ui.modal").modal("hide");
+        }}
+      >Cancel</div>
       <div
         class="ui primary button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
+          window.$(".ui.modal").modal("hide");
           updateResult(currentImg.file, markAs);
-        }}>
-        Yes
-      </div>
+        }}
+      >Yes</div>
     </div>
   </div>
   <div class="ui tiny modal" id="saveModal">
@@ -371,17 +384,15 @@
       <div
         class="ui button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
-        }}>
-        Cancel
-      </div>
+          window.$(".ui.modal").modal("hide");
+        }}
+      >Cancel</div>
       <div
         class="ui primary button"
         on:click={() => {
           saveUpdatedResults();
-        }}>
-        Save
-      </div>
+        }}
+      >Save</div>
     </div>
   </div>
   <div class="ui tiny modal" id="finishedModal">
@@ -400,17 +411,15 @@
       <div
         class="ui button"
         on:click={() => {
-          window.$('.ui.modal').modal('hide');
-        }}>
-        Close
-      </div>
+          window.$(".ui.modal").modal("hide");
+        }}
+      >Close</div>
       <div
         class="ui primary button"
         on:click={() => {
           saveUpdatedResults();
-        }}>
-        Save
-      </div>
+        }}
+      >Save</div>
     </div>
   </div>
 </Page>
