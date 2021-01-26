@@ -33,7 +33,11 @@
   });
 
   const saveSettings = () => {
+    window.$("#saveButton").addClass("loading disabled");
     settings.store = settingsCopy;
+    setTimeout(() => {
+      window.$("#saveButton").removeClass("loading disabled");
+    }, 500);
   };
 </script>
 
@@ -111,9 +115,11 @@
         </div>
       </div>
     </Card>
-    <button class="ui positive right floated button" on:click={saveSettings}
-      >Save</button
-    >
+    <button
+      id="saveButton"
+      class="ui positive right floated button"
+      on:click={saveSettings}>Save
+    </button>
   </div>
 </Page>
 
