@@ -21,7 +21,6 @@
   let currentImgIndex;
   let numReviewedImgs = 0;
   let resultsPath;
-  let markAs;
 
   let options = {
     width: 600,
@@ -49,6 +48,16 @@
     currentImg = updatedResults.images[currentImgIndex];
   };
 
+  const markAsAnimal = (img) => {
+    img.markedAsAnimal = true;
+    forceUpdate();
+  };
+
+  const undoMarkAsAnimal = (img) => {
+    img.markedAsAnimal = false;
+    forceUpdate();
+  };
+
   const markForDeletion = (d) => {
     d.deleted = true;
   };
@@ -56,6 +65,8 @@
   const undoMarkForDeletion = (d) => {
     d.deleted = false;
   };
+
+  // TODO: refactor
   const createDetection = (img) => {
     img.detections = [
       {
@@ -68,71 +79,10 @@
     ];
   };
 
-  const markImageAs = (img, markAs) => {
-    img.edited = true;
-    if (markAs === "empty") {
-      for (const d of img.detections) {
-        markForDeletion(d);
-      }
-    } else {
-      createDetection(img);
-    }
-    nextImage();
-  };
-
-  const undoMarkImageAs = (img) => {
-    img.edited = false;
-    for (const d of img.detections) {
-      if (d.deleted) {
-        undoMarkForDeletion(d);
-      }
-      if (d.manMade) {
-        // should we *actually* delete this detection here?
-        markForDeletion(d);
-      }
-    }
-    nextImage();
-  };
-
   const deleteZoom = () => {
     // this is pretty hacky but I can't find a proper way to use the kill method for ImageZoom
     window.$(".js-image-zoom__zoomed-area").remove();
     window.$(".js-image-zoom__zoomed-image").remove();
-  };
-
-  // TODO: remove
-  const updateResult = (img, label) => {
-    for (const i of updatedResults.images) {
-      if (path.basename(i.file) === path.basename(img)) {
-        i.edited = true;
-        if (label === "empty") {
-          i.max_detection_conf = 0;
-          i.detections = [];
-        } else if (label === "animal") {
-          // to handle Undo case, check if image had bbox and other data in original results
-          let wasAnimal = false;
-          let pastImg = currentResults.images.filter((i) => {
-            return path.basename(i.file) === path.basename(img);
-          })[0];
-
-          if (pastImg.detections.length > 0) {
-            wasAnimal = true;
-            i.edited = false;
-          }
-          i.max_detection_conf = wasAnimal ? pastImg.max_detection_conf : 1;
-          i.detections = [
-            {
-              label: "animal",
-              category: "1",
-              conf: wasAnimal ? pastImg.detections[0].conf : 1,
-              bbox: wasAnimal ? pastImg.detections[0].bbox : [],
-            },
-          ];
-        }
-        break;
-      }
-    }
-    nextImage();
   };
 
   const selectFile = () => {
@@ -176,17 +126,8 @@
             window.$("#finishedModal").modal("show");
           },
         });
-        updateMarkAs();
       }
     });
-  };
-
-  const updateMarkAs = () => {
-    markAs = currentImg.detections.some((d) => {
-      return !d.deleted;
-    })
-      ? "empty"
-      : "animal";
   };
 
   onMount(async () => {
@@ -226,15 +167,12 @@
         "set percent",
         (numReviewedImgs / updatedResults.images.length) * 100
       );
-
-    updateMarkAs();
   };
 
   const prevImage = () => {
     if (currentImgIndex > 0) {
       currentImg = updatedResults.images[currentImgIndex - 1];
       currentImgIndex -= 1;
-      updateMarkAs();
       if (settings.get("showImageTransition")) {
         window.$(".ui.big.image, .horizontal.label").transition("stop");
         window.$(".ui.big.image, .horizontal.label").transition("pulse");
@@ -291,7 +229,7 @@
           </div>
         </div>
         <div class="content">
-          <div style="height: 87%;">
+          <div style="height: 100%;">
             <div class="ui aligned two column grid">
               <div class="row">
                 <div class="left aligned column">
@@ -314,66 +252,94 @@
               <div>
                 <h3>Detection</h3>
               </div>
-              {#if currentImg.detections.length === 0 || currentImg.detections.every(
-                  (d) => {
-                    return d.deleted;
-                  }
-                )}
-                <div class="row">
+              {#each currentImg.detections as detection}
+                <div class="row" style="padding-bottom: 0;">
                   <div class="column">
-                    <div class="ui large black horizontal label">empty</div>
-                    <div class="ui large horizontal label">N/A</div>
-                    {#if currentImg.edited}
-                      <div class="ui large horizontal label">edited</div>
+                    <div
+                      class="ui large horizontal label"
+                      class:green={detection.label === "animal"}
+                      class:purple={detection.label === "person"}
+                      class:brown={detection.label === "vehicle"}
+                      class:grey={detection.deleted}
+                    >
+                      {detection.label}
+                    </div>
+                    <div
+                      class="ui large horizontal label"
+                      class:orange={detection.conf <= confThresh + colourSplit}
+                      class:olive={confThresh + colourSplit < detection.conf &&
+                        detection.conf < 1 - colourSplit}
+                      class:green={detection.conf >= 1 - colourSplit}
+                      class:grey={detection.deleted}
+                    >
+                      {(Number(detection.conf) * 100).toPrecision(
+                        inputParams.conf_digits
+                      )}%
+                    </div>
+                  </div>
+
+                  <div class="right aligned column">
+                    {#if detection.deleted}
+                      <button
+                        class="ui small icon button"
+                        style="padding: 6px;"
+                        on:click={() => {
+                          undoMarkForDeletion(detection);
+                          forceUpdate();
+                        }}>
+                        <i class="undo icon" />
+                      </button>
+                    {:else}
+                      <button
+                        class="ui small red inverted icon button"
+                        style="padding: 6px;"
+                        on:click={() => {
+                          markForDeletion(detection);
+                          forceUpdate();
+                        }}>
+                        <i class="times icon" />
+                      </button>
                     {/if}
                   </div>
                 </div>
               {:else}
-                {#each currentImg.detections as detection}
-                  <div class="row" style="padding-bottom: 0;">
-                    <div class="column">
-                      <div
-                        class="ui large horizontal label"
-                        class:green={detection.label === "animal"}
-                        class:purple={detection.label === "person"}
-                        class:brown={detection.label === "vehicle"}
-                      >
-                        {detection.label}
-                      </div>
-                      <div
-                        class="ui large horizontal label"
-                        class:orange={detection.conf <=
-                          confThresh + colourSplit}
-                        class:olive={confThresh + colourSplit <
-                          detection.conf && detection.conf < 1 - colourSplit}
-                        class:green={detection.conf >= 1 - colourSplit}
-                      >
-                        {(Number(detection.conf) * 100).toPrecision(
-                          inputParams.conf_digits
-                        )}%
-                      </div>
-                      {#if currentImg.edited}
-                        <div class="ui large horizontal label">edited</div>
-                      {/if}
-                    </div>
-                    {#if currentImg.detections.length > 1}
-                      <div class="right aligned column">
-                        <button
-                          class="ui small red inverted icon button"
-                          style="padding: 6px;"
-                          on:click={() => {
-                            markForDeletion(currentImg, detection);
-                          }}>
-                          <i class="times icon" />
-                        </button>
-                      </div>
+                <div class="row">
+                  <div class="column">
+                    {#if currentImg.markedAsAnimal}
+                      <div class="ui large green horizontal label">animal</div>
+                      <div class="ui large green horizontal label">100%</div>
+                    {:else}
+                      <div class="ui large black horizontal label">empty</div>
+                      <div class="ui large horizontal label">N/A</div>
                     {/if}
                   </div>
-                {/each}
-              {/if}
+                  <div class="right aligned column">
+                    {#if currentImg.markedAsAnimal}
+                      <button
+                        class="ui small icon button"
+                        style="padding: 6px;"
+                        on:click={() => {
+                          undoMarkAsAnimal(currentImg);
+                        }}>
+                        <i class="undo icon" />
+                      </button>
+                    {:else}
+                      <button
+                        class="ui small icon button"
+                        style="padding: 6px;"
+                        on:click={() => {
+                          markAsAnimal(currentImg);
+                        }}>
+                        <i class="paw icon" />
+                      </button>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+              <!-- {/if} -->
             </div>
           </div>
-          <div style="margin-bottom: 3em;">
+          <div>
             <button
               class="ui left floated compact icon button"
               class:disabled={currentImgIndex === 0}
@@ -381,24 +347,14 @@
               <i class="arrow left icon" />
               Prev
             </button>
-          </div>
-          <div class="ui fluid buttons">
             <button
-              class="ui gray button"
-              on:click={() => {
-                if (currentImg.edited) {
-                  undoMarkImageAs(currentImg);
-                } else {
-                  markImageAs(currentImg, markAs);
-                }
-              }}>
-              {#if currentImg && currentImg.edited}
-                Undo
-              {:else}Mark as {markAs}{/if}
+              class="ui right floated compact icon button"
+              class:disabled={currentImgIndex ===
+                updatedResults.images.length - 1}
+              on:click={nextImage}>
+              Next
+              <i class="arrow right icon" />
             </button>
-            <button class="ui positive button" on:click={nextImage}
-              >Correct</button
-            >
           </div>
         </div>
       </div>
