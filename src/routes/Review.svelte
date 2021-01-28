@@ -22,14 +22,13 @@
   let numReviewedImgs = 0;
   let resultsPath;
 
-  let options = {
-    width: 600,
-    height: 450,
-    zoomWidth: 522,
-    offset: { vertical: 0, horizontal: 5 },
-    zoomPosition: "right",
-    zoomStyle: "z-index: 1000; position: absolute; border-radius: 3px",
-  };
+  onMount(async () => {
+    window.$(".ui.modal").modal();
+    if (params && params.resultsPath) {
+      resultsPath = params.resultsPath;
+      readResults();
+    }
+  });
 
   onDestroy(() => {
     if (backend.childProcess || numReviewedImgs > 0) {
@@ -43,34 +42,20 @@
     }
   });
 
-  const forceUpdate = () => {
-    // pretend to update image so Svelte can pick up the changes
-    currentImg = updatedResults.images[currentImgIndex];
-  };
-
-  const markAsAnimal = (img) => {
-    img.markedAsAnimal = true;
-    //forceUpdate();
-  };
-
-  const undoMarkAsAnimal = (img) => {
-    img.markedAsAnimal = false;
-    forceUpdate();
-  };
-
-  const markForDeletion = (d) => {
-    d.deleted = true;
-  };
-
-  const undoMarkForDeletion = (d) => {
-    d.deleted = false;
-  };
-
-  const deleteZoom = () => {
-    // this is pretty hacky but I can't find a proper way to use the kill method for ImageZoom
+  afterUpdate(() => {
+    // Delete zoom instance. This is pretty hacky but I can't find a proper way to use the kill method for ImageZoom
     window.$(".js-image-zoom__zoomed-area").remove();
     window.$(".js-image-zoom__zoomed-image").remove();
-  };
+
+    new ImageZoom(document.getElementById("imageContainer"), {
+      width: 600,
+      height: 450,
+      zoomWidth: 522,
+      offset: { vertical: 0, horizontal: 5 },
+      zoomPosition: "right",
+      zoomStyle: "z-index: 1000; position: absolute; border-radius: 3px",
+    });
+  });
 
   const selectFile = () => {
     dialog
@@ -117,18 +102,27 @@
     });
   };
 
-  onMount(async () => {
-    window.$(".ui.modal").modal();
-    if (params && params.resultsPath) {
-      resultsPath = params.resultsPath;
-      readResults();
-    }
-  });
+  const forceUpdate = () => {
+    // pretend to update image so Svelte can pick up the changes
+    currentImg = updatedResults.images[currentImgIndex];
+  };
 
-  afterUpdate(() => {
-    deleteZoom();
-    new ImageZoom(document.getElementById("imageContainer"), options);
-  });
+  const markAsAnimal = (img) => {
+    img.markedAsAnimal = true;
+  };
+
+  const undoMarkAsAnimal = (img) => {
+    img.markedAsAnimal = false;
+    forceUpdate();
+  };
+
+  const markForDeletion = (d) => {
+    d.deleted = true;
+  };
+
+  const undoMarkForDeletion = (d) => {
+    d.deleted = false;
+  };
 
   const nextImage = () => {
     currentImg.reviewed = true;
