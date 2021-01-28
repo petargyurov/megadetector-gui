@@ -177,7 +177,6 @@
             category: "1",
             conf: 1,
             bbox: [],
-            manMade: true,
           },
         ];
       }
