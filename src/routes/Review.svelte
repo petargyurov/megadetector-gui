@@ -66,19 +66,6 @@
     d.deleted = false;
   };
 
-  // TODO: refactor
-  const createDetection = (img) => {
-    img.detections = [
-      {
-        label: "animal",
-        category: "1",
-        conf: 1,
-        bbox: [],
-        manMade: true,
-      },
-    ];
-  };
-
   const deleteZoom = () => {
     // this is pretty hacky but I can't find a proper way to use the kill method for ImageZoom
     window.$(".js-image-zoom__zoomed-area").remove();
@@ -180,9 +167,36 @@
     }
   };
 
+  const processUpdatedResults = () => {
+    for (const img of updatedResults.images) {
+      // create detections
+      if (img.markedAsAnimal) {
+        img.detections = [
+          {
+            label: "animal",
+            category: "1",
+            conf: 1,
+            bbox: [],
+            manMade: true,
+          },
+        ];
+      }
+
+      // delete detections
+      for (let [d, det] of img.detections.entries()) {
+        if (det.deleted) {
+          img.detections.splice(d, 1);
+        }
+      }
+    }
+  };
+
   const saveUpdatedResults = () => {
+    processUpdatedResults();
+
     window.$(".ui.primary.button").addClass("loading");
     let data = JSON.stringify(updatedResults, null, 4);
+
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
     backend.move(savePath);
