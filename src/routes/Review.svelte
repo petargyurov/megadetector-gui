@@ -50,7 +50,7 @@
 
   const markAsAnimal = (img) => {
     img.markedAsAnimal = true;
-    forceUpdate();
+    //forceUpdate();
   };
 
   const undoMarkAsAnimal = (img) => {
@@ -242,7 +242,8 @@
                       class:disabled={numReviewedImgs <= 0}
                       on:click={() => {
                         window.$("#saveModal").modal("show");
-                      }}>
+                      }}
+                    >
                       <i class="save icon" />
                       Save Progress
                     </button>
@@ -286,7 +287,8 @@
                         on:click={() => {
                           undoMarkForDeletion(detection);
                           forceUpdate();
-                        }}>
+                        }}
+                      >
                         <i class="undo icon" />
                       </button>
                     {:else}
@@ -296,7 +298,11 @@
                         on:click={() => {
                           markForDeletion(detection);
                           forceUpdate();
-                        }}>
+                          if (currentImg.detections.length === 1) {
+                            nextImage();
+                          }
+                        }}
+                      >
                         <i class="times icon" />
                       </button>
                     {/if}
@@ -320,7 +326,8 @@
                         style="padding: 6px;"
                         on:click={() => {
                           undoMarkAsAnimal(currentImg);
-                        }}>
+                        }}
+                      >
                         <i class="undo icon" />
                       </button>
                     {:else}
@@ -329,7 +336,9 @@
                         style="padding: 6px;"
                         on:click={() => {
                           markAsAnimal(currentImg);
-                        }}>
+                          nextImage();
+                        }}
+                      >
                         <i class="paw icon" />
                       </button>
                     {/if}
@@ -343,7 +352,8 @@
             <button
               class="ui left floated compact icon button"
               class:disabled={currentImgIndex === 0}
-              on:click={prevImage}>
+              on:click={prevImage}
+            >
               <i class="arrow left icon" />
               Prev
             </button>
@@ -351,7 +361,8 @@
               class="ui right floated compact icon button"
               class:disabled={currentImgIndex ===
                 updatedResults.images.length - 1}
-              on:click={nextImage}>
+              on:click={nextImage}
+            >
               Next
               <i class="arrow right icon" />
             </button>
@@ -378,13 +389,17 @@
         on:click={() => {
           window.$(".ui.modal").modal("hide");
         }}
-      >Cancel</div>
+      >
+        Cancel
+      </div>
       <div
         class="ui primary button"
         on:click={() => {
           saveUpdatedResults();
         }}
-      >Save</div>
+      >
+        Save
+      </div>
     </div>
   </div>
   <div class="ui tiny modal" id="finishedModal">
@@ -405,13 +420,17 @@
         on:click={() => {
           window.$(".ui.modal").modal("hide");
         }}
-      >Close</div>
+      >
+        Close
+      </div>
       <div
         class="ui primary button"
         on:click={() => {
           saveUpdatedResults();
         }}
-      >Save</div>
+      >
+        Save
+      </div>
     </div>
   </div>
 </Page>
