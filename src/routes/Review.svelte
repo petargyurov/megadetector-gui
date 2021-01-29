@@ -109,6 +109,7 @@
 
   const markAsAnimal = (img) => {
     img.markedAsAnimal = true;
+    currentImg.reviewed = true;
   };
 
   const undoMarkAsAnimal = (img) => {
@@ -118,6 +119,7 @@
 
   const markForDeletion = (d) => {
     d.deleted = true;
+    currentImg.reviewed = true;
   };
 
   const undoMarkForDeletion = (d) => {
@@ -126,9 +128,7 @@
 
   const nextImage = () => {
     currentImg.reviewed = true;
-    if (currentImgIndex + 1 >= updatedResults.images.length) {
-      forceUpdate();
-    } else {
+    if (currentImgIndex < updatedResults.images.length - 1) {
       currentImg = updatedResults.images[currentImgIndex + 1];
       currentImgIndex += 1;
       if (settings.get("showImageTransition")) {
@@ -137,9 +137,8 @@
       }
     }
 
-    if (numReviewedImgs <= updatedResults.images.length - 1) {
-      numReviewedImgs += 1;
-    }
+    numReviewedImgs = updatedResults.images.filter((i) => i.reviewed === true)
+      .length;
 
     // update percent
     window
@@ -366,12 +365,15 @@
             </button>
             <button
               class="ui right floated compact icon button"
-              class:disabled={currentImgIndex ===
-                updatedResults.images.length - 1}
               on:click={nextImage}
             >
-              Next
-              <i class="arrow right icon" />
+              {#if currentImgIndex === updatedResults.images.length - 1}
+                Finish
+                <i class="check icon" />
+              {:else}
+                Next
+                <i class="arrow right icon" />
+              {/if}
             </button>
           </div>
         </div>
