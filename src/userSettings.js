@@ -18,3 +18,4 @@ const schema = {
 }
 
 export const settings = new Store({ schema })
+export const store = new Store({ name: 'session' })

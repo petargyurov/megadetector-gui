@@ -1,10 +1,30 @@
 <script>
+  import SidebarLink from "./SidebarLink.svelte";
+  import { onMount } from "svelte";
+  import router from "page";
+  import { store } from "../userSettings.js";
+
   const path = require("path");
   const app = require("electron").remote.app;
   const version = app.getVersion();
   const isDev = process.env.APP_DEV
     ? process.env.APP_DEV.trim() == "true"
     : false;
+  let redirectionPage = "";
+
+  onMount(async () => {
+    window.$("#interruptionModal").modal();
+  });
+
+  // before redirecting, make sure we aren't in the middle of processing something (e.g.: detection/review)
+  const redirect = (page) => {
+    redirectionPage = page;
+    if (store.get("processing")) {
+      window.$("#interruptionModal").modal("show");
+    } else {
+      router.redirect(page);
+    }
+  };
 </script>
 
 <div
@@ -25,19 +45,57 @@
     </h3>
   </div>
 
-  <a class="item" href="/detect">
-    <h4><i class="eye icon" /> Detect</h4>
-  </a>
-  <a class="item" href="/review">
-    <h4><i class="edit icon" /> Review</h4>
-  </a>
-  <a class="item" href="/documentation">
-    <h4><i class="book icon" /> Documentation</h4>
-  </a>
-  <a
-    class="item"
+  <SidebarLink
+    title="Detect"
+    href="/detect"
+    icon="eye"
+    redirectCallback={redirect}
+  />
+  <SidebarLink
+    title="Review"
+    href="/review"
+    icon="edit"
+    redirectCallback={redirect}
+  />
+  <SidebarLink
+    title="Documentation"
+    href="/documentation"
+    icon="book"
+    redirectCallback={redirect}
+  />
+  <SidebarLink
+    title="Settings"
     href="/settings"
-    style="position: absolute; bottom: 0; width: 100%;">
-    <h4><i class="cog icon" /> Settings</h4>
-  </a>
+    icon="cog"
+    redirectCallback={redirect}
+    customStyle="position: absolute; bottom: 0; width: 100%;"
+  />
+</div>
+
+<div class="ui mini modal" id="interruptionModal">
+  <div class="header">Are you sure you want to do this?</div>
+  <div class="content">
+    <div class="description">
+      Navigating away from this page will interrupt what you were currently
+      doing!
+    </div>
+  </div>
+  <div class="actions">
+    <div
+      class="ui negative button"
+      on:click={() => {
+        router.redirect(redirectionPage);
+      }}
+    >
+      Yes
+    </div>
+    <div
+      class="ui green button"
+      on:click={() => {
+        window.$(".ui.modal").modal("hide");
+      }}
+    >
+      Go Back
+    </div>
+  </div>
 </div>

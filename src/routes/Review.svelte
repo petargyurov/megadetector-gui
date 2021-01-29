@@ -3,8 +3,9 @@
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
   import { backend } from "../bindings.js";
-  import { settings } from "../userSettings.js";
+  import { settings, store } from "../userSettings.js";
 
+  console.log(store.get("processing"));
   const fs = require("fs");
   const path = require("path");
   const { dialog } = require("electron").remote;
@@ -31,15 +32,7 @@
   });
 
   onDestroy(() => {
-    if (backend.childProcess || numReviewedImgs > 0) {
-      backend.stopProcess();
-      window.$("body").toast({
-        class: "error",
-        showIcon: "exclamation circle",
-        displayTime: 5000,
-        message: "Review interrupted!",
-      });
-    }
+    store.set("processing", false);
   });
 
   afterUpdate(() => {
@@ -98,6 +91,8 @@
             window.$("#finishedModal").modal("show");
           },
         });
+
+        store.set("processing", true);
       }
     });
   };
