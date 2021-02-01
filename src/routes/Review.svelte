@@ -3,7 +3,7 @@
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
   import { backend } from "../bindings.js";
-  import { settings } from "../userSettings.js";
+  import { settings, store } from "../userSettings.js";
 
   const fs = require("fs");
   const path = require("path");
@@ -31,15 +31,7 @@
   });
 
   onDestroy(() => {
-    if (backend.childProcess || numReviewedImgs > 0) {
-      backend.stopProcess();
-      window.$("body").toast({
-        class: "error",
-        showIcon: "exclamation circle",
-        displayTime: 5000,
-        message: "Review interrupted!",
-      });
-    }
+    store.set("processing", false);
   });
 
   afterUpdate(() => {
@@ -98,6 +90,8 @@
             window.$("#finishedModal").modal("show");
           },
         });
+
+        store.set("processing", true);
       }
     });
   };
@@ -192,6 +186,7 @@
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
     backend.move(savePath);
+    store.set("processing", false);
   };
 </script>
 

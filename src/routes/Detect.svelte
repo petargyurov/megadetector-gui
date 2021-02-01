@@ -6,7 +6,7 @@
   import router from "page";
   const path = require("path");
   const { dialog } = require("electron").remote;
-  import { settings } from "../userSettings.js";
+  import { settings, store } from "../userSettings.js";
 
   let modelSelected = false;
   let folderSelected = false;
@@ -23,15 +23,8 @@
   };
 
   onDestroy(() => {
-    if (backend.childProcess) {
-      backend.stopProcess();
-      window.$("body").toast({
-        class: "error",
-        showIcon: "exclamation circle",
-        displayTime: 5000,
-        message: "Detection interrupted!",
-      });
-    }
+    backend.stopProcess();
+    store.set("processing", false);
     window.clearInterval(countdownID);
   });
 
@@ -59,6 +52,7 @@
           window.$("#finishedModal").modal("show");
           window.$("#stopButton").addClass("disabled");
         }, 500);
+        store.set("processing", false);
       },
     });
     window.$(".ui.checkbox").checkbox({
@@ -213,12 +207,14 @@
                 class="ui right labeled fluid icon green button"
                 on:click={() => {
                   processing = true;
+                  store.set("processing", true);
                   let inputPath = window.$("#selectedDirectory").text();
                   let outputPath = path.join(inputPath, "output");
                   let conf =
                     Number(window.$(".ui.slider").slider("get value")) / 100.0;
                   backend.detect(inputPath, outputPath, conf, autosort);
-                }}>
+                }}
+              >
                 <i class="play icon" />
                 Process
               </button>
@@ -228,7 +224,8 @@
                 class="ui right labeled fluid icon red button loading disabled"
                 on:click={() => {
                   window.$("#stopModal").modal("show");
-                }}>
+                }}
+              >
                 <i class="stop icon" />
                 Stop
               </button>
@@ -264,15 +261,20 @@
         on:click={() => {
           window.$(".ui.modal").modal("hide");
         }}
-      >Back</div>
+      >
+        Back
+      </div>
       <div
         class="ui red button"
         on:click={() => {
           window.$(".ui.modal").modal("hide");
           backend.stopProcess();
           resetUI();
+          store.set("processing", false);
         }}
-      >Stop</div>
+      >
+        Stop
+      </div>
     </div>
   </div>
   <div class="ui tiny modal" id="finishedModal">
@@ -301,7 +303,9 @@
           window.$(".ui.modal").modal("hide");
           resetUI();
         }}
-      >Close</div>
+      >
+        Close
+      </div>
       {#if !autosort}
         <div
           class="ui green button"
@@ -314,7 +318,9 @@
             );
             router.redirect(`/review/${resultsPath}`);
           }}
-        >Human Review</div>
+        >
+          Human Review
+        </div>
       {/if}
     </div>
   </div>
