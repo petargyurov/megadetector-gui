@@ -5,7 +5,6 @@
   import { backend } from "../bindings.js";
   import { settings, store } from "../userSettings.js";
 
-  console.log(store.get("processing"));
   const fs = require("fs");
   const path = require("path");
   const { dialog } = require("electron").remote;
@@ -187,6 +186,7 @@
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
     backend.move(savePath);
+    store.set("processing", false);
   };
 </script>
 

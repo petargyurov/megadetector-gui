@@ -52,6 +52,7 @@
           window.$("#finishedModal").modal("show");
           window.$("#stopButton").addClass("disabled");
         }, 500);
+        store.set("processing", false);
       },
     });
     window.$(".ui.checkbox").checkbox({
@@ -269,6 +270,7 @@
           window.$(".ui.modal").modal("hide");
           backend.stopProcess();
           resetUI();
+          store.set("processing", false);
         }}
       >
         Stop
