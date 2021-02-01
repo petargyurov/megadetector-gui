@@ -169,11 +169,9 @@
       }
 
       // delete detections
-      for (let [d, det] of img.detections.entries()) {
-        if (det.deleted) {
-          img.detections.splice(d, 1);
-        }
-      }
+      img.detections = img.detections.filter((d) => {
+        return !d.deleted;
+      });
     }
   };
 
