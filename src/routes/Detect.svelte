@@ -8,7 +8,6 @@
   const { dialog } = require("electron").remote;
   import { settings, store } from "../userSettings.js";
 
-  let modelSelected = false;
   let folderSelected = false;
   let selectedFolder = "";
   let processing = false;
@@ -29,13 +28,6 @@
   });
 
   onMount(async () => {
-    window.$(".ui.dropdown").dropdown();
-    window.$(".ui.dropdown").dropdown({
-      onChange: () => {
-        modelSelected = true;
-      },
-    });
-
     window.$(".ui.slider").slider({
       min: 0,
       max: 100,
@@ -101,7 +93,6 @@
     window.$("#detectProgressBar").progress("set percent", 0);
     window.$("#pos").text("--/--");
     window.$("#eta").text("--:--:--");
-    window.$(".ui.dropdown").dropdown("clear");
     window.$(".ui.slider").slider("set value", 50);
   };
 </script>
@@ -111,27 +102,6 @@
     <Card title="Configure">
       <div class="content">
         <div class="ui two column grid">
-          <div class="row">
-            <div class="column">
-              <h4 class="ui header" style="margin-bottom: 0;">
-                Detection Model
-              </h4>
-              <div class="meta"><span>The trained model to use</span></div>
-            </div>
-            <div class="column">
-              <div class="ui fluid medium selection dropdown">
-                <i class="dropdown icon" />
-                <div class="default text">Select Model</div>
-                <div class="menu">
-                  <h5 class="ui sub header">Base Models</h5>
-                  <div class="item" data-value="1">MegaDetector v4</div>
-                  <div class="ui divider" />
-                  <h5 class="ui sub header">My Models</h5>
-                  <div class="item disabled" data-value="0">Coming Soon</div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="column">
               <h4 class="ui header" style="margin-bottom: 0;">Data Folder</h4>
@@ -203,7 +173,7 @@
           <div class="six wide column">
             {#if !processing}
               <button
-                disabled={!(modelSelected && folderSelected)}
+                disabled={!folderSelected}
                 class="ui right labeled fluid icon green button"
                 on:click={() => {
                   processing = true;
