@@ -14,6 +14,7 @@
 
   onMount(async () => {
     window.$("#interruptionModal").modal();
+    window.$("#aboutModal").modal();
   });
 
   // before redirecting, make sure we aren't in the middle of processing something (e.g.: detection/review)
@@ -31,7 +32,12 @@
   class="ui sidebar vertical menu left uncover visible"
   style="background-color: #f8f9fa; border: 0; box-shadow: 1;"
 >
-  <div style="padding: 1em; margin-bottom: 1em;">
+  <div
+    style="padding: 1em; margin-bottom: 1em; cursor: pointer;"
+    on:click={() => {
+      window.$("#aboutModal").modal("show");
+    }}
+  >
     <h3>
       <img
         class="ui avatar image"
@@ -96,6 +102,33 @@
       }}
     >
       Go Back
+    </div>
+  </div>
+</div>
+
+<div class="ui mini modal" id="aboutModal">
+  <div class="header">MegaDetector GUI v{version}</div>
+  <div class="content">
+    <div class="description">
+      <h3 class="ui header">
+        <i class="fitted small user circle icon" />
+        <div class="content">Author</div>
+        <div class="sub header">Petar Gyurov</div>
+      </h3>
+      <h3 class="ui header">
+        <i class="fitted small github icon" />
+        <div class="content">Project GitHub</div>
+        <div class="sub header">
+          https://github.com/petargyurov/megadetector-gui
+        </div>
+      </h3>
+      <h3 class="ui header">
+        <i class="fitted small github icon" />
+        <div class="content">Microsoft CameraTraps GitHub</div>
+        <div class="sub header">https://github.com/microsoft/CameraTraps</div>
+      </h3>
+      <div class="ui divider" />
+      <p class="ui tiny grey text">© 2021 Petar Gyurov</p>
     </div>
   </div>
 </div>
