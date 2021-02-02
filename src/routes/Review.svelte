@@ -64,7 +64,8 @@
   const readResults = () => {
     fs.readFile(resultsPath, "utf8", (err, data) => {
       if (err) {
-        console.log(`Error reading file from disk: ${err}`);
+        displayErrorToast("fsError", err.toString());
+        logToFile(err.toString(), "ERROR");
       } else {
         // parse JSON string to JSON object
         currentResults = JSON.parse(data);

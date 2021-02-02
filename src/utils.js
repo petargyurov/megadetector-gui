@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+import { displayErrorToast, logToFile } from './errors'
 
 export const moveFiles = (srcPath, autosort) => {
   let resultsFile = autosort ? 'results.json' : 'updated_results.json'
@@ -9,7 +10,8 @@ export const moveFiles = (srcPath, autosort) => {
     'utf8',
     (err, data) => {
       if (err) {
-        console.log(`Error reading file from disk: ${err}`) // TODO: show error
+        displayErrorToast('fsError', err.toString())
+        logToFile(err.toString(), 'ERROR')
       } else {
         let images = JSON.parse(data).images
         for (const img of images) {
