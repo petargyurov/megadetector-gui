@@ -2,7 +2,6 @@
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
-  import { backend } from "../bindings.js";
   import { settings, store } from "../userSettings.js";
 
   const fs = require("fs");
@@ -183,8 +182,49 @@
 
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
-    backend.move(savePath);
+    moveFiles();
     store.set("processing", false);
+    setTimeout(() => {
+      // move operation happens immediately so add a fake timeout for UX purposes
+      window.$(".ui.primary.button").removeClass("loading");
+      window.$(".ui.modal").modal("hide");
+    }, 1000);
+  };
+
+  // TODO: need to make this accessible to Detection process too
+  const moveFiles = () => {
+    const outputPath = path.join(path.dirname(resultsPath), "..");
+    for (const img of updatedResults.images) {
+      if (!img.reviewed) {
+        continue;
+      }
+
+      const l = img.detections.length;
+      let folder = "empty";
+      for (const i in img.detections) {
+        let previous =
+          img.detections[i == 0 ? img.detections.length - 1 : i - 1];
+        let current = img.detections[i];
+        if (current.label !== previous.label) {
+          folder = "multiple";
+          break;
+        } else {
+          folder = current.label;
+        }
+      }
+
+      let categoryPath = path.join(outputPath, folder);
+      if (!fs.existsSync(categoryPath)) {
+        fs.mkdirSync(categoryPath);
+      }
+
+      let newPath = path.join(categoryPath, path.basename(img.file));
+      fs.rename(img.file, newPath, function (err) {
+        if (err && err.code !== "ENOENT") {
+          throw err;
+        }
+      });
+    }
   };
 </script>
 
