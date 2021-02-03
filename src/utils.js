@@ -115,7 +115,7 @@ export const moveFiles = (srcPath, autosort) => {
   )
 }
 
-export const saveAsCSV = (images, dest) => {
+export const saveAsCSV = (images, dest, autosort) => {
   const detectionInfo = [
     'image',
     'detection_id',
@@ -146,7 +146,7 @@ export const saveAsCSV = (images, dest) => {
 
   let records = []
   for (const img of images) {
-    if (!img.reviewed) {
+    if (!img.reviewed && !autosort) {
       continue
     }
     let exif
@@ -156,17 +156,17 @@ export const saveAsCSV = (images, dest) => {
       continue
     }
 
-    for (const d of img.detections) {
+    if (img.detections.length === 0) {
       let record = {}
       record['image'] = img.file
-      record['detection_id'] = d.id || uuidv4().substring(0, 8)
-      record['label'] = d.label
-      record['conf'] = d.conf
-      record['bbox_x1'] = d.bbox ? d.bbox[0] : null
-      record['bbox_y1'] = d.bbox ? d.bbox[1] : null
-      record['bbox_width'] = d.bbox ? d.bbox[2] : null
-      record['bbox_height'] = d.bbox ? d.bbox[3] : null
-      record['man_made_detection'] = img.markedAsAnimal
+      record['detection_id'] = null
+      record['label'] = 'empty'
+      record['conf'] = null
+      record['bbox_x1'] = null
+      record['bbox_y1'] = null
+      record['bbox_width'] = null
+      record['bbox_height'] = null
+      record['man_made_detection'] = false
 
       for (const tag of EXIFTAGS) {
         if (exif) {
@@ -174,7 +174,29 @@ export const saveAsCSV = (images, dest) => {
           record[tag] = val ? val.description : null
         }
       }
+
       records.push(record)
+    } else {
+      for (const d of img.detections) {
+        let record = {}
+        record['image'] = img.file
+        record['detection_id'] = d.id || uuidv4().substring(0, 8)
+        record['label'] = d.label
+        record['conf'] = d.conf
+        record['bbox_x1'] = d.bbox ? d.bbox[0] : null
+        record['bbox_y1'] = d.bbox ? d.bbox[1] : null
+        record['bbox_width'] = d.bbox ? d.bbox[2] : null
+        record['bbox_height'] = d.bbox ? d.bbox[3] : null
+        record['man_made_detection'] = img.markedAsAnimal || false
+
+        for (const tag of EXIFTAGS) {
+          if (exif) {
+            let val = exif ? exif[tag] : null
+            record[tag] = val ? val.description : null
+          }
+        }
+        records.push(record)
+      }
     }
   }
   if (records.length > 0) {
