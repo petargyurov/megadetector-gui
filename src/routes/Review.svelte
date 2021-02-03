@@ -3,7 +3,7 @@
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
   import { settings, store } from "../userSettings.js";
-  import { moveFiles } from "../utils";
+  import { moveFiles, saveAsCSV } from "../utils";
 
   const fs = require("fs");
   const path = require("path");
@@ -180,15 +180,19 @@
     processUpdatedResults();
 
     window.$(".ui.primary.button").addClass("loading");
-    let data = JSON.stringify(updatedResults, null, 4);
 
+    // write JSON
+    let data = JSON.stringify(updatedResults, null, 4);
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
+
+    // write (enriched) CSV
+    savePath = path.join(path.dirname(resultsPath), "updated_results.csv");
+    saveAsCSV(updatedResults.images, savePath);
 
     moveFiles(path.join(path.dirname(resultsPath), ".."));
 
     store.set("processing", false);
-
     setTimeout(() => {
       // move operation happens immediately so add a fake timeout for UX purposes
       window.$(".ui.primary.button").removeClass("loading");
