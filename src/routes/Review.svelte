@@ -192,7 +192,6 @@
 
     moveFiles(path.join(path.dirname(resultsPath), ".."));
 
-    store.set("processing", false);
     setTimeout(() => {
       // move operation happens immediately so add a fake timeout for UX purposes
       window.$(".ui.primary.button").removeClass("loading");
