@@ -141,11 +141,20 @@ export const saveAsCSV = (images, dest) => {
   const csvWriter = createCsvWriter({
     path: dest,
     header: header,
+    append: fs.existsSync(dest), // only append if file already exists (otherwise header won't be written)
   })
 
   let records = []
   for (const img of images) {
-    let exif = getExifInfo(img.file)
+    if (!img.reviewed) {
+      continue
+    }
+    let exif
+    try {
+      exif = getExifInfo(img.file)
+    } catch (error) {
+      continue
+    }
 
     for (const d of img.detections) {
       let record = {}
@@ -165,12 +174,12 @@ export const saveAsCSV = (images, dest) => {
           record[tag] = val ? val.description : null
         }
       }
-
       records.push(record)
     }
   }
-  console.log(records)
-  csvWriter.writeRecords(records)
+  if (records.length > 0) {
+    csvWriter.writeRecords(records)
+  }
 }
 
 const getExifInfo = (imagePath) => {
