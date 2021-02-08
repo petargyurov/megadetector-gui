@@ -39,6 +39,11 @@
         "If an image contains multiple detections, you can edit each detection during the review process. Upon moving the image to a folder, it will be placed in a folder called 'multiple'",
     },
     {
+      title: "What are all the extra columns in my CSV?",
+      description:
+        "The CSV file is enriched with EXIF data extracted from each image. This is information about the camera settings used at the time, as well as GPS data. Not all images come with EXIF data -- it usually depends on the camera setup.",
+    },
+    {
       title: "Why is detection so slow?",
       description:
         "The underlying MegaDetector model is not optimised all that well for computers that do not have a supported GPU. If you have the option of running this application on a machine with a GPU you can expect much faster processing.",
