@@ -1,13 +1,16 @@
-# MegaDetector GUI
-
-A desktop application that simplifies the use of the animal detection model known as [MegaDetector.](https://github.com/microsoft/CameraTraps/blob/master/megadetector.md)
-
-<img src="https://i.imgur.com/TyhRLdQ.png" width="600" >
-<img src="https://i.imgur.com/T5DpDag.png" width="600" >
+<div align="center">
+    <h1>MegaDetector GUI</h1>
+    <img src="https://i.imgur.com/FCTbqGH.png" width="150" >
+    <h2>AI Utility for Sorting Camera Trap Images</h2>
+    <span>An GUI wrapper (and more) based on <a href="https://github.com/microsoft/CameraTraps/blob/master/megadetector.md"> MegaDetector </a></span>
+    <br/>
+    <br/>
+    <img src="https://i.imgur.com/sqO65si.png" width="500" >
+    <br/>
+    <br/>
+</div>
 
 ## Introduction
-
-This application works in tandem with another project, [megadetector-api](https://github.com/petargyurov/megadetector-api), which is the backbone of this application. This repository is purely the GUI side of things.
 
 The aim of this project is to provide a simple, easy to use, application that enables field scientists to **quickly sort through camera trap images**. Camera traps are often set off by moving leaves and consequentlly take lots of empty shots. Weeding out empty images is a mundane task that would typically take several hours of sorting through hundreds of images.
 
@@ -32,7 +35,7 @@ Using machine learning we can reduce the time it takes to sort these images by m
 
 ## Installation
 
-Go to the [Releases page](https://github.com/petargyurov/megadetector-gui/releases) and download the provided installer.
+Go to the [Releases page](https://github.com/petargyurov/megadetector-gui/releases) and download the provided installer for the latest available version.
 
 ### Supported Platforms
 
@@ -44,7 +47,7 @@ MacOS :x:
 
 Linux: :x:
 
-## Development
+## Contributing
 
 This repository is for the frontend of the application. Whether to keep the backend and frontend as two separate repositories is still up for debate, but for now this is the case.
 
