@@ -2,10 +2,10 @@
     <h3>MegaDetector GUI</h3>
     <img src="https://i.imgur.com/FCTbqGH.png" width="150" >
     <h4>AI Utility for Sorting Camera Trap Images</h4>
-    <span>An GUI wrapper (and more) based on <a href="https://github.com/microsoft/CameraTraps/blob/master/megadetector.md"> MegaDetector </a></span>
+    <span>Based on <a href="https://github.com/microsoft/CameraTraps/blob/master/megadetector.md"> MegaDetector </a></span>
     <br/>
     <br/>
-    <img src="https://i.imgur.com/sqO65si.png" width="500" >
+    <img src="https://i.imgur.com/0oP47nn.png" width="500" >
     <br/>
     <br/>
 </div>
