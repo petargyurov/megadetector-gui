@@ -1,6 +1,8 @@
+const fs = require('fs')
 const path = require('path')
 const kill = require('tree-kill')
 import { displayErrorToast, logToFile } from './errors'
+import { moveFiles, saveAsCSV } from './utils'
 
 class BackendInterface {
   // ideally these would be made private with the # character but support for this feature is limited in various dependencies
@@ -44,16 +46,6 @@ class BackendInterface {
     })
   }
 
-  move(updatedResultsPath) {
-    const parameters = ['move', updatedResultsPath]
-    this._runExec(parameters)
-
-    this.childProcess.on('exit', function () {
-      $('.ui.primary.button').removeClass('loading')
-      $('.ui.modal').modal('hide')
-    })
-  }
-
   detect(inputPath, outputPath, conf, autosort) {
     const modelPath = path.join(
       process.cwd(),
@@ -71,7 +63,6 @@ class BackendInterface {
       '-ot',
       conf,
       '--electron',
-      autosort ? '--auto-sort' : '--no-auto-sort',
       '--verbose',
     ]
 
@@ -95,6 +86,28 @@ class BackendInterface {
         $('#detectProgressBar').progress('set percent', percent)
         $('#pos').text(pos)
         $('#eta').text(eta === undefined ? '--:--:--' : eta)
+      }
+    })
+
+    this.childProcess.on('exit', function () {
+      if (autosort) {
+        const data = fs.readFileSync(
+          path.join(outputPath, 'results.json'),
+          'utf8',
+        )
+        let results = JSON.parse(data)
+
+        moveFiles(results, inputPath, autosort)
+
+        // update JSON
+        fs.writeFileSync(
+          path.join(outputPath, 'results.json'),
+          JSON.stringify(results, null, 4),
+        )
+
+        const images = results.images
+        const savePath = path.join(outputPath, 'results.csv')
+        saveAsCSV(images, savePath, autosort)
       }
     })
   }

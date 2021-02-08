@@ -2,8 +2,8 @@
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import Page from "../components/Page.svelte";
   import ImageZoom from "js-image-zoom";
-  import { backend } from "../bindings.js";
   import { settings, store } from "../userSettings.js";
+  import { moveFiles, saveAsCSV } from "../utils";
 
   const fs = require("fs");
   const path = require("path");
@@ -64,7 +64,8 @@
   const readResults = () => {
     fs.readFile(resultsPath, "utf8", (err, data) => {
       if (err) {
-        console.log(`Error reading file from disk: ${err}`);
+        displayErrorToast("fsError", err.toString());
+        logToFile(err.toString(), "ERROR");
       } else {
         // parse JSON string to JSON object
         currentResults = JSON.parse(data);
@@ -176,15 +177,30 @@
   };
 
   const saveUpdatedResults = () => {
+    // Order of operations here is important
+
     processUpdatedResults();
 
     window.$(".ui.primary.button").addClass("loading");
-    let data = JSON.stringify(updatedResults, null, 4);
 
+    // move files first and update img.file field with new location
+    let basePath = path.join(path.dirname(resultsPath), "..");
+    moveFiles(updatedResults, basePath);
+
+    // write JSON
+    let data = JSON.stringify(updatedResults, null, 4);
     let savePath = path.join(path.dirname(resultsPath), "updated_results.json");
     fs.writeFileSync(savePath, data);
-    backend.move(savePath);
-    store.set("processing", false);
+
+    // write (enriched) CSV
+    savePath = path.join(path.dirname(resultsPath), "updated_results.csv");
+    saveAsCSV(updatedResults.images, savePath);
+
+    setTimeout(() => {
+      // move operation happens immediately so add a fake timeout for UX purposes
+      window.$(".ui.primary.button").removeClass("loading");
+      window.$(".ui.modal").modal("hide");
+    }, 1000);
   };
 </script>
 

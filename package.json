@@ -82,14 +82,17 @@
   },
   "dependencies": {
     "concurrently": "^5.3.0",
+    "csv-writer": "^1.6.0",
     "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^7.0.0",
+    "exifreader": "^3.14.0",
     "fomantic-ui": "^2.8.7",
     "jquery": "^3.5.1",
     "js-image-zoom": "^0.7.0",
     "page": "^1.11.6",
-    "sirv-cli": "^1.0.10"
+    "sirv-cli": "^1.0.10",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
