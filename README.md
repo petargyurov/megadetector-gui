@@ -1,7 +1,7 @@
 <div align="center">
-    <h1>MegaDetector GUI</h1>
+    <h3>MegaDetector GUI</h3>
     <img src="https://i.imgur.com/FCTbqGH.png" width="150" >
-    <h2>AI Utility for Sorting Camera Trap Images</h2>
+    <h4>AI Utility for Sorting Camera Trap Images</h4>
     <span>An GUI wrapper (and more) based on <a href="https://github.com/microsoft/CameraTraps/blob/master/megadetector.md"> MegaDetector </a></span>
     <br/>
     <br/>
