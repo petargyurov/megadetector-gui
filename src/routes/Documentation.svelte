@@ -1,5 +1,4 @@
 <script>
-  import Page from "../components/Page.svelte";
   import { onMount } from "svelte";
   const path = require("path");
 
@@ -32,27 +31,26 @@
     },
     {
       title: "What classifications can I expect to see?",
-      description: "Currently, only 'animal' and 'empty'",
+      description: "Currently, 'animal', 'person', 'vehicle' or 'empty'",
+    },
+    {
+      title: "How are multiple detections handled?",
+      description:
+        "If an image contains multiple detections, you can edit each detection during the review process. Upon moving the image to a folder, it will be placed in a folder called 'multiple'",
+    },
+    {
+      title: "Why is detection so slow?",
+      description:
+        "The underlying MegaDetector model is not optimised all that well for computers that do not have a supported GPU. If you have the option of running this application on a machine with a GPU you can expect much faster processing.",
     },
     {
       title: "Can I train the model on my own data?",
-      description: `Short answer: no. Long answer: you can train the underlying MegaDetector model yourself but 
-        the application currently does not support an official way to import new models. 
-        This is something that will be addressed in a later release. For a 'hacky' solution, you can 
-        replace the model under /engine/models/ in the app's installation directory with your trained model; the name must be the same.`,
-    },
-    {
-      title: "What do I with the contents of the 'output' folder?",
-      description: `The folder contains copies of the original images with bounding boxes drawn. 
-              It also contains the 'results.json' file which holds classification and bounding 
-              box data for each image. This data is required if you wish to carry out a review of the model's predictions. 
-              Once you have reviewed all the images in question, you are free to do what you want with this folder and its contents. 
-              It is advisable to keep the 'results.json' file as bounding box data is valuable.`,
+      description: `Short answer: no. Advanced users may want to look into training the underlying MegaDetector model themselves but that is not supported in this application.`,
     },
     {
       title: "Does the model output its bounding box data?",
       description:
-        "Yes. You can find this data in the 'results.json' file in the 'output' folder",
+        "Yes. You can find this data in the JSON or CSV files found in the 'output' folder",
     },
     {
       title: "How do I resume my review?",
@@ -64,20 +62,13 @@
       description:
         "Create an issue at the project's GitHub page: https://github.com/petargyurov/megadetector-gui",
     },
-    {
-      title: "Can I undo my classification change?",
-      description:
-        "Yes. Use the 'Prev' button to go back to a previous image and the Undo button will be available.",
-    },
   ];
 </script>
 
-<style>
-</style>
-
 <div
   class="ui one column divided grid container"
-  style="margin-left: 1em; padding-top: 1em;">
+  style="margin-left: 1em; padding-top: 1em;"
+>
   <div class="row">
     <div class="column">
       <div class="ui right floated basic segment search" style="margin: 0">
@@ -109,8 +100,10 @@
       </p>
       <p>
         At the end, the application will move each original image into either an
-        <span class="ui label"> <i class="folder icon" />animal</span>
-        or an
+        <span class="ui label"> <i class="folder icon" />animal</span>,
+        <span class="ui label"> <i class="folder icon" />person</span>,
+        <span class="ui label"> <i class="folder icon" />vehicle</span>,
+        <span class="ui label"> <i class="folder icon" />multiple</span> or
         <span class="ui label"> <i class="folder icon" />empty</span>
         folder, as well as produce bounding box data for its predictions.
       </p>
@@ -120,11 +113,12 @@
           id="step1"
           class="link step"
           on:click={(x) => {
-            window.$('#stepsAccordion').accordion('toggle', 0);
-            window.$('#step1').toggleClass('active');
-            window.$('#step2').removeClass('active');
-            window.$('#step3').removeClass('active');
-          }}>
+            window.$("#stepsAccordion").accordion("toggle", 0);
+            window.$("#step1").toggleClass("active");
+            window.$("#step2").removeClass("active");
+            window.$("#step3").removeClass("active");
+          }}
+        >
           <i class="cogs icon" />
           <div class="content">
             <div class="title">Configure</div>
@@ -137,11 +131,12 @@
           id="step2"
           class="link step"
           on:click={() => {
-            window.$('#stepsAccordion').accordion('toggle', 1);
-            window.$('#step1').removeClass('active');
-            window.$('#step2').toggleClass('active');
-            window.$('#step3').removeClass('active');
-          }}>
+            window.$("#stepsAccordion").accordion("toggle", 1);
+            window.$("#step1").removeClass("active");
+            window.$("#step2").toggleClass("active");
+            window.$("#step3").removeClass("active");
+          }}
+        >
           <i class="eye icon" />
           <div class="content">
             <div class="title">Detect</div>
@@ -154,11 +149,12 @@
           id="step3"
           class="link step"
           on:click={() => {
-            window.$('#stepsAccordion').accordion('toggle', 2);
-            window.$('#step1').removeClass('active');
-            window.$('#step2').removeClass('active');
-            window.$('#step3').toggleClass('active');
-          }}>
+            window.$("#stepsAccordion").accordion("toggle", 2);
+            window.$("#step1").removeClass("active");
+            window.$("#step2").removeClass("active");
+            window.$("#step3").toggleClass("active");
+          }}
+        >
           <i class="edit icon" />
           <div class="content">
             <div class="title">Review</div>
@@ -171,7 +167,8 @@
       <div
         id="stepsAccordion"
         class="ui styled fluid accordion"
-        style="margin-bottom: 20px;">
+        style="margin-bottom: 20px;"
+      >
         <div class="ui medium header title">
           <i class="dropdown icon" />
           Step 1: Configure
@@ -181,25 +178,20 @@
             Open the Detect page. The following will explain how to configure
             the detection procedure.
           </p>
-          <h2 class="ui sub header">1.1 Select the model</h2>
-          <p>
-            Currently the only available model is MegaDetector v4 (the latest
-            version at the time)
-          </p>
-          <h2 class="ui sub header">1.2 Import Data</h2>
+          <h2 class="ui sub header">1.1 Import Data</h2>
           <p>
             Select the folder that contains your images. You do not need to
-            select the images themselves, just the parent foler.
+            select the images themselves, just the parent folder.
           </p>
           <p>Multiple folder locations are not supported at this time.</p>
-          <h2 class="ui sub header">1.3 Set Confidence Threshold</h2>
+          <h2 class="ui sub header">1.2 Set Confidence Threshold</h2>
           <p>
             The model needs to know how confident it needs to be in its
             prediction to classify something as an animal. For example, if you
             set the threshold to 80% and the model makes a detection but is only
             50% confident about it then it will classify that image as empty.
           </p>
-          <h2 class="ui sub header">1.4 Auto-sort</h2>
+          <h2 class="ui sub header">1.3 Auto-sort</h2>
           <p>
             When this is set to ON, the application will skip the review stage
             and automatically move the original images based on the predictions
@@ -219,8 +211,8 @@
           <div>
             Pressing the
             <button class="ui positive compact button">Process</button>
-            button will begin the detection process. The application will take
-            some time to initiate the model. This can take up to a minute.
+            button will begin the detection process. The application will take some
+            time to initiate the model. This can take up to a minute.
           </div>
           <h2 class="ui sub header">2.2 Monitoring Progress</h2>
           <p>
@@ -239,8 +231,8 @@
             <div class="ui large compact label" style="margin-right: 5px;">
               <i class="clock icon" /><span id="eta">00:05:36</span>
             </div>
-            displays the estimated remaining time (HH:MM:SS). It updates after
-            each image. May not be very accurate for a small number of images.
+            displays the estimated remaining time (HH:MM:SS). It updates after each
+            image. May not be very accurate for a small number of images.
           </div>
           <p />
           <p>
@@ -274,7 +266,8 @@
                 class="left aligned small floating ui label"
                 data-inverted=""
                 data-tooltip="Current image filename and total image count"
-                data-position="bottom center">
+                data-position="bottom center"
+              >
                 <i class="images outline icon" />
                 demo.JPG
                 <div class="detail">16/123</div>
@@ -283,15 +276,24 @@
                 id="imageContainer"
                 data-inverted=""
                 data-tooltip="Progress bar showing percentage of reviewed images"
-                data-position="bottom left">
+                data-position="bottom left"
+              >
                 <img
                   class="ui large image"
-                  src={isDev ? path.join(process.cwd(), 'src', 'assets', 'demo.JPG') : path.join(process.cwd(), 'resources', 'assets', 'demo.JPG')}
-                  alt="demo" />
+                  src={isDev
+                    ? path.join(process.cwd(), "src", "assets", "demo.JPG")
+                    : path.join(
+                        process.cwd(),
+                        "resources",
+                        "assets",
+                        "demo.JPG"
+                      )}
+                  alt="demo"
+                />
               </div>
             </div>
             <div class="content">
-              <div style="height: 87%;">
+              <div style="height: 100%;">
                 <div class="ui aligned two column grid">
                   <div class="row">
                     <div class="left aligned column">
@@ -303,67 +305,70 @@
                           class="ui small compact icon primary button"
                           data-inverted=""
                           data-tooltip="Save updated classification data and move reviewed images into folders"
-                          data-position="bottom center">
+                          data-position="bottom center"
+                        >
                           <i class="save icon" />
                           Save Progress
                         </button>
                       </h2>
                     </div>
                   </div>
-                  <div class="row" style="padding: 0">
-                    <div class="column">
-                      <h4 class="ui header">Label</h4>
-                    </div>
-                    <div class="right aligned column">
-                      <h4 class="ui header">Confidence</h4>
-                    </div>
+                  <div>
+                    <h3>Detection</h3>
                   </div>
 
-                  <div class="row">
+                  <div class="row" style="padding-bottom: 0;">
                     <div class="column">
                       <div
                         class="ui medium green horizontal label"
                         data-inverted=""
                         data-tooltip="The model's predicted classification"
-                        data-position="bottom center">
+                        data-position="bottom center"
+                      >
                         animal
                       </div>
-                    </div>
-                    <div class="right aligned column">
                       <div
                         class="ui medium orange horizontal label"
                         data-inverted=""
                         data-tooltip="The model's confidence for this classification"
-                        data-position="bottom center">
+                        data-position="bottom center"
+                      >
                         67%
                       </div>
+                    </div>
+                    <div class="right aligned column">
+                      <button
+                        class="ui tiny red inverted icon button"
+                        style="padding: 6px;"
+                        data-inverted=""
+                        data-tooltip="Remove this classification"
+                        data-position="bottom center"
+                      >
+                        <i class="times icon" />
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div style="margin-bottom: 1em;">
+              <div>
                 <button
-                  class="ui left small floated compact icon button"
+                  class="ui left floated tiny compact icon button"
                   data-inverted=""
-                  data-tooltip="Returns to the previous image"
-                  data-position="right center">
+                  data-tooltip="Previous image"
+                  data-position="bottom center"
+                >
                   <i class="arrow left icon" />
                   Prev
                 </button>
-              </div>
-              <div class="ui small fluid buttons">
                 <button
-                  class="ui gray button"
+                  class="ui right floated tiny compact icon button"
                   data-inverted=""
-                  data-tooltip="Changes classification and goes to next image"
-                  data-position="bottom center">
-                  Mark as empty
+                  data-tooltip="Next image"
+                  data-position="bottom center"
+                >
+                  Next
+                  <i class="arrow right icon" />
                 </button>
-                <button
-                  class="ui positive button"
-                  data-inverted=""
-                  data-tooltip="Accepts classification and goes to next image"
-                  data-position="bottom center">Correct</button>
               </div>
             </div>
             <div class="ui green bottom attached progress" data-percent="10">
@@ -378,9 +383,10 @@
             If you come across an image with an animal but the detector didn't
             find anything (or wasn't confident enough about its prediction), you
             can click the
-            <button class="ui compact button">Mark as animal</button>
-            button. A pop-up window will ask you to confirm. Note that you won't
-            be able to add bounding box data.
+            <button class="ui compact icon button">
+              <i class="paw icon" />
+            </button>
+            button. Note that you won't be able to add bounding box data.
           </div>
           <h2 class="ui sub header">
             3.3 Correcting an "animal" classification
@@ -388,21 +394,17 @@
           <div>
             If the detector has incorrectly detected something in the image as
             an animal then clicking the
-            <button class="ui compact button">Mark as empty</button>
-            button will remove the incorrect classification and bounding box
-            data.
+            <button class="ui compact red inverted icon button">
+              <i class="times icon" />
+            </button>
+            button will remove the incorrect classification and bounding box data.
           </div>
           <h2 class="ui sub header">3.4 Undoing</h2>
           <div>
             If you have made a mistake, you can use the
-            <button class="ui small compact icon button">
-              <i class="arrow left icon" />
-              Prev
-            </button>
-            button to go back to the image in question. If you have
-            re-classified something, you can
-            <button class="ui compact button">Undo</button>
-            it. Bounding box data will be restored (if it existed).
+            <button class="ui compact icon button">
+              <i class="undo icon" />
+            </button> button to undo. Bounding box data will be restored (if it existed).
           </div>
           <h2 class="ui sub header">3.5 Saving Progress</h2>
           <div>
@@ -417,8 +419,8 @@
             <span class="ui label">
               <i class="file icon" />updated_results.json
             </span>
-            and it will move the images you have reviewed to their respective
-            folder, i.e.:
+            and it will move the images you have reviewed to their respective folder,
+            i.e.:
             <span class="ui label"> <i class="folder icon" />animal</span>
             or
             <span class="ui label"> <i class="folder icon" />empty</span>
@@ -431,7 +433,8 @@
             <span class="ui label"><i class="file icon" />results.json</span>
             file. If you are resuming a previous review session then you need to
             import the
-            <span class="ui label"><i class="file icon" />updated_results.json
+            <span class="ui label"
+              ><i class="file icon" />updated_results.json
             </span>
             file.
           </div>
@@ -442,7 +445,8 @@
       <div
         id="faqsAccordion"
         class="ui styled fluid accordion"
-        style="margin-bottom: 50px;">
+        style="margin-bottom: 50px;"
+      >
         {#each faqs as faq, i}
           <div id={`q${i}`} class="ui medium header title">
             <i class="dropdown icon" />
@@ -457,3 +461,6 @@
     </div>
   </div>
 </div>
+
+<style>
+</style>
