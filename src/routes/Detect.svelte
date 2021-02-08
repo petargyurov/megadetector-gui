@@ -276,22 +276,20 @@
       >
         Close
       </div>
-      {#if !autosort}
-        <div
-          class="ui green button"
-          on:click={() => {
-            window.$(".ui.modal").modal("hide");
-            const resultsPath = path.join(
-              selectedFolder,
-              "output",
-              "results.json"
-            );
-            router.redirect(`/review/${resultsPath}`);
-          }}
-        >
-          Human Review
-        </div>
-      {/if}
+      <div
+        class="ui green button"
+        on:click={() => {
+          window.$(".ui.modal").modal("hide");
+          const resultsPath = path.join(
+            selectedFolder,
+            "output",
+            "results.json"
+          );
+          router.redirect(`/review/${resultsPath}`);
+        }}
+      >
+        Human Review
+      </div>
     </div>
   </div>
 </Page>

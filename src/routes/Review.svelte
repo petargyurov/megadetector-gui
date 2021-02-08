@@ -177,9 +177,15 @@
   };
 
   const saveUpdatedResults = () => {
+    // Order of operations here is important
+
     processUpdatedResults();
 
     window.$(".ui.primary.button").addClass("loading");
+
+    // move files first and update img.file field with new location
+    let basePath = path.join(path.dirname(resultsPath), "..");
+    moveFiles(updatedResults, basePath);
 
     // write JSON
     let data = JSON.stringify(updatedResults, null, 4);
@@ -189,8 +195,6 @@
     // write (enriched) CSV
     savePath = path.join(path.dirname(resultsPath), "updated_results.csv");
     saveAsCSV(updatedResults.images, savePath);
-
-    moveFiles(path.join(path.dirname(resultsPath), ".."));
 
     setTimeout(() => {
       // move operation happens immediately so add a fake timeout for UX purposes

@@ -1,7 +1,8 @@
+const fs = require('fs')
 const path = require('path')
 const kill = require('tree-kill')
 import { displayErrorToast, logToFile } from './errors'
-import { moveFiles } from './utils'
+import { moveFiles, saveAsCSV } from './utils'
 
 class BackendInterface {
   // ideally these would be made private with the # character but support for this feature is limited in various dependencies
@@ -90,8 +91,23 @@ class BackendInterface {
 
     this.childProcess.on('exit', function () {
       if (autosort) {
-        // move files
-        moveFiles(inputPath, autosort)
+        const data = fs.readFileSync(
+          path.join(outputPath, 'results.json'),
+          'utf8',
+        )
+        let results = JSON.parse(data)
+
+        moveFiles(results, inputPath, autosort)
+
+        // update JSON
+        fs.writeFileSync(
+          path.join(outputPath, 'results.json'),
+          JSON.stringify(results, null, 4),
+        )
+
+        const images = results.images
+        const savePath = path.join(outputPath, 'results.csv')
+        saveAsCSV(images, savePath, autosort)
       }
     })
   }
