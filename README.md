@@ -16,6 +16,14 @@ The aim of this project is to provide a simple, easy to use, application that en
 
 Using machine learning we can reduce the time it takes to sort these images by making use of _object detection_. **This application categorises your images in folders** depending on what it thinks it has detected.
 
+## Installation (Windows Only)
+
+Go to the [Releases page](https://github.com/petargyurov/megadetector-gui/releases) and download the provided installer for the latest available version.
+
+### GPU Support
+
+Read the instructions [here](https://github.com/petargyurov/megadetector-gui/blob/master/GPU_SUPPORT.md) on how to enable significantly faster processing.
+
 ## Features
 
 ### Current Features
@@ -32,20 +40,6 @@ Using machine learning we can reduce the time it takes to sort these images by m
 - ability to train custom models
 - in-app labelling
 - upload photos to a database of your choice
-
-## Installation
-
-Go to the [Releases page](https://github.com/petargyurov/megadetector-gui/releases) and download the provided installer for the latest available version.
-
-### Supported Platforms
-
-Whilst this is an Electron application which will work on most operating systems, the backend executable that it needs to be bundled with is currently only built for Windows. This will be addressed in the future: all that is required is someone with the desired OS to build the backend executable; volunteers are welcome!
-
-Windows :heavy_check_mark:
-
-MacOS :x:
-
-Linux: :x:
 
 ## Contributing
 
