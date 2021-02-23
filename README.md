@@ -1,7 +1,7 @@
 <div align="center">
     <h3>MegaDetector GUI</h3>
     <img src="https://i.imgur.com/FCTbqGH.png" width="150" >
-    <h4>AI Utility for Sorting Camera Trap Images</h4>
+    <h4>AI-assisted Tool for Sorting Camera Trap Images</h4>
     <span>Based on <a href="https://github.com/microsoft/CameraTraps/blob/master/megadetector.md"> MegaDetector </a></span>
     <br/>
     <br/>
@@ -16,7 +16,9 @@ The aim of this project is to provide a simple, easy to use, application that en
 
 Using machine learning we can reduce the time it takes to sort these images by making use of _object detection_. **This application categorises your images in folders** depending on what it thinks it has detected.
 
-## Installation (Windows Only)
+## Installation
+
+The only currently supported platform is **Windows (64-bit)**.
 
 Go to the [Releases page](https://github.com/petargyurov/megadetector-gui/releases) and download the provided installer for the latest available version.
 
@@ -26,48 +28,47 @@ Read the instructions [here](https://github.com/petargyurov/megadetector-gui/blo
 
 ## Features
 
-### Current Features
-
-- automatic detection of animals in a set of photos
-- review process that allows you to correct the results of the automatic detection
-- zoom-and-pan feature on photos during review to help spot animals
-- automatically move the images in labelled folders
-- detailed documentation on how to use the application
-
-### Future Features
-
-- ability to import other models
-- ability to train custom models
-- in-app labelling
-- upload photos to a database of your choice
+- [x] automatic detection of animals in a set of photos
+- [x] review process that allows you to correct the results of the automatic detection
+- [x] zoom-and-pan feature on photos during review to help spot animals
+- [x] automatically move the images in labelled folders
+- [x] detailed documentation on how to use the application
+- [ ] ability to train and use custom models
+- [ ] in-app labelling
+- [ ] upload photos to a database of your choice
 
 ## Contributing
 
-This repository is for the frontend of the application. Whether to keep the backend and frontend as two separate repositories is still up for debate, but for now this is the case.
-
 ### Tech Stack
 
-The application itself is built using ElectronJS. It provides flexibility and it's easy to use. The UI is build using the [Svelte](https://svelte.dev/) framework, and components are styled using [Fomantic-UI](https://fomantic-ui.com/)
+The app is built using ElectronJS. The UI framework is [Svelte](https://svelte.dev/), and components are styled using [Fomantic-UI](https://fomantic-ui.com/)
 
-ElectronJS lets you execute native code outside the normal browser window which makes it easy for us to invoke the backend executable. The backend is built to function like a CLI program which makes it easy for us to pass commands and parameters to it. For more information check out the [backend repository](https://github.com/petargyurov/megadetector-api).
+The brains of the app are in Python. I have adapted MegaDetector's code into a slightly more organised API. We use this API to build a basic CLI app that compiles to an executable. The executable is called by the Electron app whenever we need to use the model for inference.
 
-### Dev Installation & Running (Windows)
+### Dev Installation & Running
 
 If you wish to use this project for development purposes follow these steps:
 
 Pre-requsites:
 
-1. Node.js (https://nodejs.org/en/)
-2. The backend executable (see instructions [here](https://github.com/petargyurov/megadetector-api#building-an-executable))
+1. Python 3.x
+2. Node.js
 
 Steps:
 
 1. Clone this repository
 2. Install the depencies using `npm install`
-3. Build the Fomantic (Semantic) CSS and JS: `npm run semantic-build`
-4. Place the backend executable (`cli.exe`) in the `engine/` folder
-5. Place the MegaDetector model file (`md_v4.1.0.pb`) in the `engine/models/` folder
+3. Build the Fomantic-UI CSS and JS: `npm run semantic-build`
+4. Build the backend executable:
+   1. `cd engine/`
+   2. Create a virtual environment
+   3. Activate the virtual environment
+   4. Install requirements: `pip install -r requirements.txt`
+   5. Download the MegaDetector model from [here](https://github.com/microsoft/CameraTraps/blob/master/megadetector.md#download-links)
+   6. Place the model file in the `engine/models/` folder
+   7. Build the .exe: `pyinstaller -F cli_wrapper/cli.py`
 
 Running the application:
 
 1. To run the app in dev mode: `npm run start`
+2. To build the installer: `npm run build`
