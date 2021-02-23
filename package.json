@@ -9,10 +9,6 @@
   "main": "src/index.js",
   "scripts": {
     "start": "set APP_DEV=true && concurrently \"npm:sv-dev\" \"electron-forge start\"",
-    "startProd": "set APP_DEV=false && concurrently \"npm:sv-start\" \"electron-forge start\"",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
     "sv-build": "rollup -c",
     "sv-dev": "rollup -c -w",
     "sv-start": "sirv public",
@@ -48,7 +44,7 @@
     ],
     "extraFiles": [
       "engine/models/*",
-      "engine/cli.exe"
+      "engine/dist/cli.exe"
     ]
   },
   "keywords": [],
