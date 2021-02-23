@@ -114,5 +114,5 @@ class BackendInterface {
 }
 
 export const backend = new BackendInterface(
-  path.join(process.cwd(), 'engine', 'cli.exe'),
+  path.join(process.cwd(), 'engine', 'dist', 'cli.exe'),
 )
