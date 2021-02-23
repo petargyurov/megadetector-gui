@@ -32,6 +32,14 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
+    "files": [
+      "**/*",
+      "!engine/**/*"
+    ],
+    "extraFiles": [
+      "engine/models/*.pb",
+      "engine/dist/cli.exe"
+    ],
     "extraResources": [
       {
         "from": "src/assets",
@@ -41,10 +49,6 @@
           "uninstall.ico"
         ]
       }
-    ],
-    "extraFiles": [
-      "engine/models/*",
-      "engine/dist/cli.exe"
     ]
   },
   "keywords": [],
