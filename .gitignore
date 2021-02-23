@@ -4,6 +4,16 @@
 /public/build/
 /dist/
 
-.DS_Store
+/**/.idea/
+/**/__pycache__/
+/**/venv/
+/**/build/
+/**/*.egg-info/
+
+*.pyc
+*.pb
 *.exe
 *.log
+*.spec
+
+.DS_Store
