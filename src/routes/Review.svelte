@@ -132,8 +132,9 @@
       }
     }
 
-    numReviewedImgs = updatedResults.images.filter((i) => i.reviewed === true)
-      .length;
+    numReviewedImgs = updatedResults.images.filter(
+      (i) => i.reviewed === true
+    ).length;
 
     // update percent
     window

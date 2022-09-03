@@ -2,14 +2,26 @@ import sys
 import os
 import json
 import click
+import logging
 
 from utils import save_as_csv
+
+# import tensorflow.compat.v1 as tf
+
+# tf.disable_v2_behavior()
+
+# from tensorflow.python.client import device_lib
+# print(device_lib.list_local_devices())
+
+# gpu_available = True if tf.config.list_physical_devices('GPU') else False
+        
+# print(f'GPU FOUND: {gpu_available}')
+# print( tf.config.list_physical_devices('GPU'))
 
 
 @click.group()
 def mega():
     pass
-
 
 # TODO: support for results field
 
@@ -25,7 +37,7 @@ def mega():
 @click.option('--recursive/--not-recursive', default=False, help='Whether to search for images in folders within the base folder provided')
 @click.option('-n', '--n-cores', default=0, help='Number of CPU cores to utilise. Will be ignored if a valid GPU is available')
 @click.option('-cp', '--checkpoint-path', default=None, type=str, help='Path to JSON checkpoint file')
-@click.option('-cf', '--checkpoint-frequency', default=-1, type=str, help='How often to write to checkpoint file, i.e.: every N images')
+@click.option('-cf', '--checkpoint-frequency', default=-1, type=int, help='How often to write to checkpoint file, i.e.: every N images')
 @click.option('--show/--no-show', default=False, help='Whether to output the results in the console')
 @click.option('--bbox/--no-bbox', default=True, help='Whether save images with bounding boxes.')
 @click.option('--verbose/--quiet', default=False, help='Whether to output or supress Tensorflow message')
@@ -108,5 +120,10 @@ def move(results_path, auto_sort):
             continue
 
 
-if getattr(sys, 'frozen', False):
-    mega(sys.argv[1:])
+# Use this when testing out this script from the command line, i.e.: python cli.py detect ....
+if __name__ == '__main__':
+    mega()
+
+# Use this when invoking from .exe
+# if getattr(sys, 'frozen', False):
+#     mega(sys.argv[1:])

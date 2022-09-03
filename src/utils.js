@@ -140,6 +140,7 @@ export const saveAsCSV = (images, dest, autosort) => {
     try {
       exif = getExifInfo(img.file)
     } catch (error) {
+      console.log('EXIF', error)
       continue
     }
 
