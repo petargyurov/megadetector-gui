@@ -1,22 +1,10 @@
-import sys
+import 
 import os
 import json
 import click
-import logging
 
 from utils import save_as_csv
 
-# import tensorflow.compat.v1 as tf
-
-# tf.disable_v2_behavior()
-
-# from tensorflow.python.client import device_lib
-# print(device_lib.list_local_devices())
-
-# gpu_available = True if tf.config.list_physical_devices('GPU') else False
-        
-# print(f'GPU FOUND: {gpu_available}')
-# print( tf.config.list_physical_devices('GPU'))
 
 
 @click.group()
