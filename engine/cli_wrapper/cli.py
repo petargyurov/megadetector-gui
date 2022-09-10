@@ -1,4 +1,4 @@
-import 
+import sys
 import os
 import json
 import click
@@ -109,9 +109,9 @@ def move(results_path, auto_sort):
 
 
 # Use this when testing out this script from the command line, i.e.: python cli.py detect ....
-if __name__ == '__main__':
-    mega()
+# if __name__ == '__main__':
+#     mega()
 
 # Use this when invoking from .exe
-# if getattr(sys, 'frozen', False):
-#     mega(sys.argv[1:])
+if getattr(sys, 'frozen', False):
+    mega(sys.argv[1:])
