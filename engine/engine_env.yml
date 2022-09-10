@@ -1,0 +1,21 @@
+name: engine_env
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - cudatoolkit=10.1
+  - cudnn=7.6
+  - python=3.7
+  - tensorflow-gpu=2.3
+  - numpy
+  - Pillow
+  - requests
+  - setuptools
+  - click
+  - pyinstaller
+  - matplotlib
+  - pip
+  - pip:
+    - exif

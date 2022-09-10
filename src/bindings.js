@@ -4,6 +4,8 @@ const kill = require('tree-kill')
 import { displayErrorToast, logToFile } from './errors'
 import { moveFiles, saveAsCSV } from './utils'
 
+const { spawn } = require('child_process');
+
 class BackendInterface {
   // ideally these would be made private with the # character but support for this feature is limited in various dependencies
   executablePath
@@ -24,12 +26,8 @@ class BackendInterface {
   // there is a bug with commonJS (?) that fails to recognize the # character used for private methods
   // so as a workaround we are using _ as a weak convention for this purpose
   _runExec(params) {
-    this.childProcess = require('child_process').execFile(
-      this.executablePath,
-      params,
-      {
-        stdio: ['inherit'],
-      },
+    this.childProcess = spawn(this.executablePath,
+      params, {},
       function (err, data) {
         if (err) {
           displayErrorToast('backendError', err.toString())
@@ -37,13 +35,18 @@ class BackendInterface {
         if (data) {
           logToFile(data)
         }
-      },
-    )
+      });
 
     // TF logs to stderr so we need to listen in and log this
     this.childProcess.stderr.on('data', (data) => {
       logToFile(data)
+      console.log(`stdout/err?: ${data}`);
     })
+
+    this.childProcess.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+
   }
 
   detect(inputPath, outputPath, conf, autosort) {
@@ -51,7 +54,7 @@ class BackendInterface {
       process.cwd(),
       'engine',
       'models',
-      'md_v4.1.0.pb',
+      'md_v4.1.0.pb'
     )
     const parameters = [
       'detect',
@@ -69,7 +72,9 @@ class BackendInterface {
     this._runExec(parameters)
 
     this.childProcess.stdout.on('data', (data) => {
-      if (data.startsWith('Processing Images')) {
+      data = data.toString();
+
+      if (data.startsWith('Processing Images  [')) {
         if ($('#stopButton').hasClass('loading')) {
           $('#stopButton').removeClass('loading disabled')
         }

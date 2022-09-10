@@ -4,7 +4,7 @@
     "email": "pgyurov93@gmail.com"
   },
   "name": "megadetector-gui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Machine learning powered tool for sorting camera trap images",
   "main": "src/index.js",
   "scripts": {
@@ -87,7 +87,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^7.0.0",
     "exifreader": "^3.14.0",
-    "fomantic-ui": "^2.8.7",
+    "fomantic-ui": "^2.8.8",
     "jquery": "^3.5.1",
     "js-image-zoom": "^0.7.0",
     "page": "^1.11.6",
